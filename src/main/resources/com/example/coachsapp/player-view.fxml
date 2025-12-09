@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.PlayerController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Create Player" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <Label text="Name:" style="-fx-min-width: 80;"/>
+        <TextField fx:id="nameField" promptText="Enter player name"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Age:" style="-fx-min-width: 80;"/>
+        <TextField fx:id="ageField" promptText="Enter age"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Jersey:" style="-fx-min-width: 80;"/>
+        <TextField fx:id="jerseyField" promptText="Enter jersey number"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Position:" style="-fx-min-width: 80;"/>
+        <ComboBox fx:id="positionCombo"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Club:" style="-fx-min-width: 80;"/>
+        <ComboBox fx:id="clubCombo"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Injured:" style="-fx-min-width: 80;"/>
+        <CheckBox fx:id="injuredCheckBox" text="Yes, player is injured"/>
+    </HBox>
+
+    <Button text="Submit" onAction="#savePlayer" style="-fx-padding: 10;"/>
+
+    <HBox spacing="10">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back" onAction="#goBack"/>
+    </HBox>
+</VBox>
+

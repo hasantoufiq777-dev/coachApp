@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.TransferController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Player Transfer" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <Label text="From Manager:" style="-fx-min-width: 100;"/>
+        <ComboBox fx:id="fromManagerCombo" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="To Manager:" style="-fx-min-width: 100;"/>
+        <ComboBox fx:id="toManagerCombo" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Player:" style="-fx-min-width: 100;"/>
+        <ComboBox fx:id="playerCombo" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <Button text="Transfer" onAction="#transferPlayer" style="-fx-padding: 10;"/>
+
+    <HBox spacing="10">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back" onAction="#goBack"/>
+    </HBox>
+</VBox>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.MainController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <Label text="Coaches App" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
+
+    <VBox spacing="10">
+        <Button text="Manage Players" onAction="#goToPlayers" style="-fx-padding: 10; -fx-font-size: 14;"/>
+        <Button text="Manage Managers" onAction="#goToManagers" style="-fx-padding: 10; -fx-font-size: 14;"/>
+        <Button text="Transfer Player" onAction="#goToTransfer" style="-fx-padding: 10; -fx-font-size: 14;"/>
+    </VBox>
+</VBox>
+

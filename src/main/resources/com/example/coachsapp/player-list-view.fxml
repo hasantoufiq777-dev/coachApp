@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.PlayerListController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Players" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="playerTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="Name" fx:id="nameColumn"/>
+            <TableColumn text="Age" fx:id="ageColumn"/>
+            <TableColumn text="Jersey" fx:id="jerseyColumn"/>
+            <TableColumn text="Position" fx:id="positionColumn"/>
+            <TableColumn text="Status" fx:id="statusColumn"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Add Player" onAction="#addPlayer"/>
+        <Button text="Delete Player" onAction="#deletePlayer"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Back" onAction="#goBack"/>
+    </HBox>
+</VBox>
+
