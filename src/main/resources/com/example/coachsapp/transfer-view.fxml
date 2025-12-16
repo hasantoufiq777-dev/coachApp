@@ -4,30 +4,32 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.TransferController"
-      spacing="10" style="-fx-padding: 20;">
+      spacing="14" stylesheets="@styles.css" styleClass="app-root transfer-form"
+      style="-fx-padding: 28 28 28 28; -fx-alignment: TOP_LEFT;">
 
-    <Label text="Player Transfer" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    <Label text="Player Transfer" styleClass="heading-lg"/>
 
-    <HBox spacing="10">
-        <Label text="From Manager:" style="-fx-min-width: 100;"/>
-        <ComboBox fx:id="fromManagerCombo" HBox.hgrow="ALWAYS"/>
+    <GridPane hgap="14" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="140" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label text="From Manager:" styleClass="label-inline" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <ComboBox fx:id="fromManagerCombo" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="combo-modern" prefWidth="420"/>
+
+        <Label text="To Manager:" styleClass="label-inline" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <ComboBox fx:id="toManagerCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="combo-modern" prefWidth="420"/>
+
+        <Label text="Player:" styleClass="label-inline" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <ComboBox fx:id="playerCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="combo-modern" prefWidth="420"/>
+    </GridPane>
+
+    <HBox spacing="12" style="-fx-padding: 10 0 0 0;">
+        <Button text="Transfer" onAction="#transferPlayer" styleClass="btn btn-accent primary-action"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Back" onAction="#goBack" styleClass="btn btn-secondary secondary-action"/>
     </HBox>
 
-    <HBox spacing="10">
-        <Label text="To Manager:" style="-fx-min-width: 100;"/>
-        <ComboBox fx:id="toManagerCombo" HBox.hgrow="ALWAYS"/>
-    </HBox>
-
-    <HBox spacing="10">
-        <Label text="Player:" style="-fx-min-width: 100;"/>
-        <ComboBox fx:id="playerCombo" HBox.hgrow="ALWAYS"/>
-    </HBox>
-
-    <Button text="Transfer" onAction="#transferPlayer" style="-fx-padding: 10;"/>
-
-    <HBox spacing="10">
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
-    </HBox>
 </VBox>
 

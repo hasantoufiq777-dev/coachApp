@@ -45,24 +45,37 @@ public class TransferController {
         Player player = playerCombo.getValue();
 
         if (fromManager == null || toManager == null || player == null) {
-            System.out.println("Error: All fields must be selected!");
+            System.out.println("✗ Error: All fields must be selected!");
+            showError("Please select both managers and a player");
             return;
         }
 
         if (fromManager.equals(toManager)) {
-            System.out.println("Error: Cannot transfer to the same club!");
+            System.out.println("✗ Error: Cannot transfer to the same club!");
+            showError("Cannot transfer to the same club!");
             return;
         }
 
         boolean success = TransferService.transferPlayer(fromManager, toManager, player);
         if (success) {
-            System.out.println("Transfer successful: " + player.getName() +
+            System.out.println("✓ Transfer successful: " + player.getName() +
                              " from " + fromManager.getClub().getClubName() +
                              " to " + toManager.getClub().getClubName());
             updatePlayerCombo();
+            // Clear selections to avoid confusion
+            playerCombo.setValue(null);
+            toManagerCombo.setValue(null);
         } else {
-            System.out.println("Transfer failed!");
+            System.out.println("✗ Transfer failed!");
+            showError("Transfer failed. Please check your selections.");
         }
+    }
+
+    private void showError(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+        alert.setTitle("Transfer Error");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

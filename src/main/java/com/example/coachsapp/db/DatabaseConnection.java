@@ -5,10 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Database connection manager and initialization
- * Handles SQLite database setup and schema creation
- */
+
 public class DatabaseConnection {
 
     private static final String DATABASE_URL = "jdbc:sqlite:coaches_app.db";
@@ -58,6 +55,14 @@ public class DatabaseConnection {
 
             statement.execute("CREATE TABLE IF NOT EXISTS player (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, age INTEGER NOT NULL, jersey_number INTEGER NOT NULL, position TEXT NOT NULL, injured BOOLEAN DEFAULT 0, club_id INTEGER, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (club_id) REFERENCES club(id) ON DELETE SET NULL)");
             System.out.println("✓ Player table created/verified");
+
+            // Add club_view column to player table if it doesn't exist (SQLite will error if column exists)
+            try {
+                statement.execute("ALTER TABLE player ADD COLUMN club_view TEXT");
+                System.out.println("✓ Added column 'club_view' to player table");
+            } catch (SQLException ignored) {
+                // Column already exists or cannot be added; ignore
+            }
 
             statement.execute("CREATE TABLE IF NOT EXISTS transfer_history (id INTEGER PRIMARY KEY AUTOINCREMENT, player_id INTEGER NOT NULL, from_club_id INTEGER, to_club_id INTEGER, transfer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (player_id) REFERENCES player(id), FOREIGN KEY (from_club_id) REFERENCES club(id), FOREIGN KEY (to_club_id) REFERENCES club(id))");
             System.out.println("✓ Transfer History table created/verified");

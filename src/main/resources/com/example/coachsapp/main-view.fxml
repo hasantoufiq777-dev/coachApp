@@ -3,15 +3,15 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.coachsapp.controller.MainController"
-      spacing="15" style="-fx-padding: 20;">
+    fx:controller="com.example.coachsapp.controller.MainController"
+    spacing="14" fx:id="root" stylesheets="@styles.css" styleClass="app-root page-root" alignment="CENTER">
 
-    <Label text="Coaches App" style="-fx-font-size: 28; -fx-font-weight: bold;"/>
+    <Label text="Coaches App" styleClass="heading-lg"/>
 
-    <VBox spacing="10">
-        <Button text="Manage Players" onAction="#goToPlayers" style="-fx-padding: 10; -fx-font-size: 14;"/>
-        <Button text="Manage Managers" onAction="#goToManagers" style="-fx-padding: 10; -fx-font-size: 14;"/>
-        <Button text="Transfer Player" onAction="#goToTransfer" style="-fx-padding: 10; -fx-font-size: 14;"/>
+    <VBox spacing="12" styleClass="card" alignment="CENTER">
+        <Button text="Manage Players" onAction="#goToPlayers" styleClass="btn btn-primary primary-action" prefWidth="300" prefHeight="50"/>
+        <Button text="Manage Managers" onAction="#goToManagers" styleClass="btn btn-primary" prefWidth="300" prefHeight="50"/>
+        <Button text="Transfer Player" onAction="#goToTransfer" styleClass="btn btn-accent" prefWidth="300" prefHeight="50"/>
     </VBox>
 </VBox>
 

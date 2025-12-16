@@ -2,6 +2,7 @@ package com.example.coachsapp.db;
 
 import com.example.coachsapp.model.Player;
 import com.example.coachsapp.model.Position;
+import com.example.coachsapp.model.Club;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,11 @@ import java.util.List;
 public class PlayerRepository {
 
     private Connection connection;
+    private ClubRepository clubRepository;
 
     public PlayerRepository() {
         this.connection = DatabaseConnection.getInstance().getConnection();
+        this.clubRepository = new ClubRepository();
     }
 
     /**
@@ -27,8 +30,8 @@ public class PlayerRepository {
             return null;
         }
 
-        String sql = "INSERT INTO player (name, age, jersey_number, position, injured, club_id) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO player (name, age, jersey_number, position, injured, club_id, club_view) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, player.getName());
             pstmt.setInt(2, player.getAge());
@@ -37,11 +40,20 @@ public class PlayerRepository {
             pstmt.setBoolean(5, player.isInjured());
             pstmt.setObject(6, player.getClubId(), Types.INTEGER);
 
+            // Determine club_view snapshot
+            String clubView = null;
+            if (player.getClubId() != null) {
+                Club c = clubRepository.findById(player.getClubId());
+                if (c != null) clubView = c.getClubName();
+            }
+            pstmt.setString(7, clubView);
+
             pstmt.executeUpdate();
 
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 player.setId(generatedKeys.getInt(1));
+                player.setClubView(clubView);
                 System.out.println("✓ Player saved: " + player.getName() + " - #" + player.getJersey() +
                                  " (" + player.getPosition() + ") (ID: " + player.getId() + ")");
                 return player;
@@ -56,7 +68,7 @@ public class PlayerRepository {
      * Find player by ID
      */
     public Player findById(int id) {
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id FROM player WHERE id = ?";
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -75,7 +87,7 @@ public class PlayerRepository {
      */
     public List<Player> findAll() {
         List<Player> players = new ArrayList<>();
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id FROM player ORDER BY name";
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player ORDER BY name";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
@@ -93,7 +105,7 @@ public class PlayerRepository {
      */
     public List<Player> findByClubId(int clubId) {
         List<Player> players = new ArrayList<>();
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id FROM player " +
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player " +
                      "WHERE club_id = ? ORDER BY name";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, clubId);
@@ -113,7 +125,7 @@ public class PlayerRepository {
      */
     public boolean update(Player player) {
         String sql = "UPDATE player SET name = ?, age = ?, jersey_number = ?, position = ?, injured = ?, " +
-                     "club_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+                     "club_id = ?, club_view = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, player.getName());
             pstmt.setInt(2, player.getAge());
@@ -121,7 +133,15 @@ public class PlayerRepository {
             pstmt.setString(4, player.getPosition().toString());
             pstmt.setBoolean(5, player.isInjured());
             pstmt.setObject(6, player.getClubId(), Types.INTEGER);
-            pstmt.setInt(7, player.getId());
+
+            // Determine club_view snapshot
+            String clubView = null;
+            if (player.getClubId() != null) {
+                Club c = clubRepository.findById(player.getClubId());
+                if (c != null) clubView = c.getClubName();
+            }
+            pstmt.setString(7, clubView);
+            pstmt.setInt(8, player.getId());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -185,6 +205,14 @@ public class PlayerRepository {
             player.setClubId(null);
         } else {
             player.setClubId(clubId);
+        }
+        try {
+            String clubView = rs.getString("club_view");
+            if (!rs.wasNull()) {
+                player.setClubView(clubView);
+            }
+        } catch (SQLException ignore) {
+            // older DBs may not have column; ignore
         }
         return player;
     }

@@ -1,5 +1,6 @@
 package com.example.coachsapp.dialog;
 
+import com.example.coachsapp.model.Club;
 import com.example.coachsapp.model.Player;
 import com.example.coachsapp.model.Position;
 import com.example.coachsapp.util.AppState;
@@ -21,8 +22,8 @@ public class AddPlayerDialog {
         dialog.setTitle("Add Player");
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(parentStage);
-        dialog.setWidth(400);
-        dialog.setHeight(400);
+        dialog.setWidth(600);
+        dialog.setHeight(600);
 
         Label nameLabel = new Label("Player Name:");
         TextField nameField = new TextField();
@@ -42,26 +43,32 @@ public class AddPlayerDialog {
         positionCombo.setPromptText("Select position");
 
         Label clubLabel = new Label("Club:");
-        ComboBox<String> clubCombo = new ComboBox<>();
-        // Populate club names from managers
-        clubCombo.setItems(FXCollections.observableArrayList(
-            AppState.managers.stream().map(m -> m.getClub().getClubName()).distinct().collect(java.util.stream.Collectors.toList())
-        ));
+        ComboBox<Club> clubCombo = new ComboBox<>();
+        // Use global AppState.clubs which is kept in sync with DB; fall back to clubs from managers
+        if (!AppState.clubs.isEmpty()) {
+            clubCombo.setItems(FXCollections.observableArrayList(AppState.clubs));
+        } else {
+            var clubsFromManagers = AppState.managers.stream().map(m -> m.getClub()).distinct().toList();
+            clubCombo.setItems(FXCollections.observableArrayList(clubsFromManagers));
+        }
         clubCombo.setPromptText("Select club");
 
         Label injuredLabel = new Label("Injured:");
         CheckBox injuredCheckBox = new CheckBox("Yes, player is injured");
         injuredCheckBox.setSelected(false);
+        injuredCheckBox.setStyle("-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;");
 
         Button saveButton = new Button("Save");
+        saveButton.getStyleClass().addAll("btn", "btn-primary");
         Button cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().addAll("btn", "btn-secondary");
 
         saveButton.setOnAction(event -> {
             String name = nameField.getText().trim();
             String ageText = ageField.getText().trim();
             String jerseyText = jerseyField.getText().trim();
             Position position = positionCombo.getValue();
-            String selectedClub = clubCombo.getValue();
+            Club selectedClub = clubCombo.getValue();
             boolean injured = injuredCheckBox.isSelected();
 
             if (name.isEmpty() || ageText.isEmpty() || jerseyText.isEmpty() || position == null || selectedClub == null) {
@@ -84,7 +91,11 @@ public class AddPlayerDialog {
                 }
 
                 result = new Player(name, age, jersey, position, injured);
-                result.setClubId(getClubIdByName(selectedClub));
+                // Only set the club id on the returned Player; persistence and AppState updates
+                // are handled by the caller (controller) so the dialog remains UI-only.
+                result.setClubId(selectedClub.getId());
+
+                System.out.println("✓ Player Created (dialog): " + name + " @ " + selectedClub.getClubName());
                 dialog.close();
             } catch (NumberFormatException e) {
                 showError("Age and Jersey must be valid numbers");
@@ -104,21 +115,16 @@ public class AddPlayerDialog {
             injuredLabel, injuredCheckBox,
             new HBox(10, saveButton, cancelButton)
         );
+        vbox.getStyleClass().add("app-root");
 
         Scene scene = new Scene(vbox);
+        scene.getStylesheets().add(getClass().getResource("/com/example/coachsapp/styles.css").toExternalForm());
         dialog.setScene(scene);
         dialog.showAndWait();
 
         return result;
     }
 
-    private Integer getClubIdByName(String clubName) {
-        return AppState.managers.stream()
-            .filter(m -> m.getClub().getClubName().equals(clubName))
-            .findFirst()
-            .map(m -> m.getClub().getId())
-            .orElse(null);
-    }
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

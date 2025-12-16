@@ -13,7 +13,7 @@ public class Club {
         this.players = new ArrayList<>();
     }
 
-    // Getters and Setters
+
     public Integer getId() {
         return id;
     }
@@ -46,11 +46,7 @@ public class Club {
 
     @Override
     public String toString() {
-        return "Club{" +
-                "id=" + id +
-                ", clubName='" + clubName + '\'' +
-                ", players=" + players.size() +
-                '}';
+        return clubName;
     }
 }
 

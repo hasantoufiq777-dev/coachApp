@@ -1,0 +1,575 @@
+/* Luxury theme styles for CoachesApp - styles.css
+   Palette: indigo/purple primary, amber accent, dark background
+*/
+
+/* Root and background */
+.app-root {
+    -fx-font-family: "Segoe UI Semibold", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    /* High-contrast vivid dynamic gradient (base — animated by BackgroundAnimator)
+       Fallback static gradient for environments without animation */
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #08103a 0%, #2a1653 40%, #0b3a4b 100%);
+    -fx-text-fill: #eef2ff;
+    -fx-font-size: 13px;
+    -fx-font-smoothing-type: gray;
+    -fx-padding: 18px 20px;
+}
+
+/* Glass card */
+.card {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-insets: 0;
+    -fx-background-radius: 12;
+    -fx-padding: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 24, 0, 0, 8);
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-width: 1;
+}
+
+.panel {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+}
+
+/* Headings */
+.heading-lg {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 3);
+}
+
+.heading-md { -fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #f8fafc; }
+.heading-sm { -fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #e6eef8; }
+
+/* Labels inline */
+.label-inline { -fx-min-width: 110px; -fx-text-fill: #e6eef8; -fx-font-weight: 600; }
+
+/* Buttons
+   btn + modifier classes: btn-primary, btn-secondary, btn-accent, btn-danger
+*/
+.btn {
+    -fx-cursor: hand;
+    -fx-padding: 8 14 8 14;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(2,6,23,0.45), 8, 0, 0, 4);
+    -fx-translate-z: 0;
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-background-insets: 0;
+}
+
+/* Force all buttons to the purple primary palette to override platform defaults */
+.app-root .button, .button, .button .text, .app-root .btn {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d28d9 0%, #7c3aed 100%);
+    -fx-text-fill: #ffffff;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.28), 12, 0, 0, 6);
+}
+.app-root .button:hover, .button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aed 0%, #9f7bff 100%);
+}
+.app-root .button:pressed, .button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4f46e5 0%, #7c3aed 100%);
+    -fx-effect: none;
+    -fx-translate-y: 1;
+}
+
+/* Ensure platform default .button styles are overridden: force purple palette for btn classes */
+.button.btn, .button.btn-primary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d28d9 0%, #7c3aed 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.28), 12, 0, 0, 6);
+}
+.button.btn:hover, .button.btn-primary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aed 0%, #9f7bff 100%);
+}
+
+.button.btn-secondary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(124,58,237,0.10) 0%, rgba(99,102,241,0.06) 100%);
+    -fx-text-fill: #efe6ff;
+    -fx-border-color: rgba(124,58,237,0.18);
+}
+.button.btn-secondary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(124,58,237,0.16) 0%, rgba(99,102,241,0.10) 100%);
+}
+
+.button.btn-accent {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8b5cf6 0%, #9f7bff 100%);
+    -fx-text-fill: white;
+}
+.button.btn-accent:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #a78bfa 0%, #c4b5fd 100%);
+}
+
+.button.btn-danger {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #c026d3 0%, #7c3aed 100%);
+    -fx-text-fill: white;
+}
+
+.btn:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn:pressed {
+    -fx-scale-x: 0.99;
+    -fx-scale-y: 0.99;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #4f46e5 0%, #8b5cf6 100%);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.25), 12, 0, 0, 6);
+}
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6366f1 0%, #a78bfa 100%);
+}
+
+.btn-secondary {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+    -fx-text-fill: #f1f5f9;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-width: 1;
+}
+.btn-secondary:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%);
+}
+
+.btn-accent {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #f59e0b 0%, #fbbf24 100%);
+    -fx-text-fill: #071233;
+    -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.18), 12, 0, 0, 6);
+}
+
+.btn-danger {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ef4444 0%, #f97316 100%);
+}
+
+/* Ripple effect (simple) */
+.btn:focused {
+    -fx-effect: innershadow( gaussian , rgba(255,255,255,0.06), 6, 0.0, 0, 1 );
+}
+
+/* Table styling */
+.table-modern {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: rgba(255,255,255,0.06);
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 6;
+    -fx-border-radius: 8;
+}
+
+.table-modern .column-header-background {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #5b21b6 0%, #7c3aed 100%);
+    -fx-padding: 12 10 12 10;
+    -fx-min-height: 44px;
+}
+
+.table-modern .column-header {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #5b21b6 0%, #7c3aed 100%);
+    -fx-padding: 12 10 12 10;
+    -fx-min-height: 44px;
+}
+
+.table-modern .column-header .label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 800;
+    -fx-font-size: 14px;
+    -fx-opacity: 1.0;
+    -fx-text-overrun: clip;
+}
+
+/* Specific header styling for Name column */
+.table-modern .col-name .label, .table-modern .col-name .column-header .label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 900;
+    -fx-font-size: 14px;
+}
+
+/* Slight border under header to separate from rows */
+.table-modern .column-header-background {
+    -fx-border-color: rgba(0,0,0,0.3);
+    -fx-border-width: 0 0 3 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.table-modern .table-row-cell:filled:selected, .table-modern .table-row-cell:focused:selected {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(99,102,241,0.22) 0%, rgba(139,92,246,0.18) 100%);
+}
+
+.table-modern .table-row-cell:hover {
+    -fx-background-color: rgba(255,255,255,0.03);
+}
+
+/* Ensure table data cells are visible (white bold) without needing hover */
+.table-modern .table-cell {
+    -fx-text-fill: #ffffff;
+    -fx-opacity: 1.0;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.table-modern .table-row-cell .table-cell {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Make player name column text white and bold - force all text elements */
+.table-modern .col-name .table-cell {
+    -fx-text-fill: #ffffff !important;
+    -fx-font-weight: 900 !important;
+    -fx-font-size: 15px !important;
+}
+
+.table-modern .col-name .table-cell .text {
+    -fx-fill: #ffffff !important;
+    -fx-font-weight: 900 !important;
+    -fx-font-size: 15px !important;
+}
+
+.table-modern .col-name .text {
+    -fx-fill: #ffffff !important;
+    -fx-font-weight: 900 !important;
+}
+
+/* Ensure all table cell text is white and bold */
+.table-modern .table-cell .text {
+    -fx-fill: #ffffff !important;
+    -fx-font-weight: bold !important;
+}
+
+/* Override any hyperlink or colored text in table cells */
+.table-modern .table-cell .hyperlink,
+.table-modern .table-cell .label,
+.table-modern .table-row-cell .text {
+    -fx-text-fill: #ffffff !important;
+    -fx-fill: #ffffff !important;
+    -fx-font-weight: bold !important;
+}
+
+/* Force white text for all TableColumn cells */
+.table-modern TableColumn .table-cell {
+    -fx-text-fill: #ffffff !important;
+}
+
+.table-modern TableColumn .table-cell .text {
+    -fx-fill: #ffffff !important;
+    -fx-font-weight: bold !important;
+}
+
+/* Ensure selected cells keep readable white bold text */
+.table-modern .table-row-cell:filled:selected .table-cell, .table-modern .table-row-cell:focused:selected .table-cell {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* Make horizontal gridlines subtle but visible */
+.table-modern .table-row-cell {
+    -fx-border-color: rgba(255,255,255,0.03);
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-compact .table-cell {
+    -fx-padding: 6 8;
+}
+
+/* List styling */
+.list-card {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+    -fx-min-height: 200px;
+    -fx-pref-height: 350px;
+    -fx-max-height: 400px;
+}
+
+/* ListView scrollbar styling */
+.list-card .scroll-bar:vertical {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-pref-width: 12px;
+    -fx-background-radius: 6;
+}
+
+.list-card .scroll-bar:vertical .track {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 6;
+}
+
+.list-card .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(139,92,246,0.7) 0%, rgba(99,102,241,0.7) 100%);
+    -fx-background-radius: 6;
+}
+
+.list-card .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(167,139,250,0.85) 0%, rgba(129,140,248,0.85) 100%);
+}
+
+.list-card .scroll-bar .increment-button, .list-card .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ListView cell styling with colorful gradient backgrounds */
+.list-card .list-cell {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(124,58,237,0.45) 0%, rgba(79,70,229,0.40) 100%);
+    -fx-background-radius: 6;
+    -fx-padding: 14 16 14 16;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-border-color: rgba(255,255,255,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+
+.list-card .list-cell:filled {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(139,92,246,0.55) 0%, rgba(99,102,241,0.50) 100%);
+}
+
+.list-card .list-cell:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(167,139,250,0.65) 0%, rgba(129,140,248,0.60) 100%);
+    -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.35), 10, 0, 0, 3);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+.list-card .list-cell:selected {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, rgba(192,132,252,0.75) 0%, rgba(165,180,252,0.70) 100%);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 700;
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-width: 2;
+}
+
+.list-card .list-cell .text {
+    -fx-fill: #ffffff;
+    -fx-font-weight: 600;
+}
+
+/* Inputs and combos */
+.combo-modern .text, .combo-modern .label {
+    -fx-text-fill: #e6eef8;
+}
+
+/* Ensure ComboBox selected value and popup items are clearly visible (white, full opacity) */
+.app-root .combo-box .label, .app-root .combo-box .text, .combo-box .label, .combo-box .text {
+    -fx-text-fill: #ffffff;
+    -fx-opacity: 1.0;
+}
+
+/* Popup list cells: selected row should have white text on selection background */
+.combo-box .list-cell:filled:selected, .combo-box .list-cell:focused:selected {
+    -fx-text-fill: #ffffff;
+}
+
+/* Ensure the arrow button and cell backgrounds don't force low-contrast text */
+.combo-box .arrow-button, .combo-box .arrow {
+    -fx-background-color: transparent;
+}
+
+/* For the custom combo-modern class, enforce label/text color too */
+.combo-modern .label, .combo-modern .text {
+    -fx-text-fill: #ffffff;
+    -fx-opacity: 1.0;
+}
+
+/* Transfer form specific layout tweaks */
+.transfer-form .label-inline { -fx-text-fill: #eef2ff; -fx-font-size: 14px; }
+.transfer-form .heading-lg { -fx-font-size: 26px; -fx-font-weight: 800; }
+.transfer-form .combo-modern, .transfer-form .combo-box {
+    -fx-pref-height: 44px;
+    -fx-padding: 6 10 6 12;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-width: 1.25;
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-font-size: 14px;
+}
+
+/* Popup list background and items: light background with dark text for readability */
+.combo-box .list-view, .combo-box .list-cell {
+    -fx-background-color: #ffffff; /* popup background */
+}
+.combo-box .list-cell {
+    -fx-text-fill: #111111;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 13px;
+}
+.combo-box .list-cell:filled:selected, .combo-box .list-cell:focused:selected {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #6d28d9 0%, #7c3aed 100%);
+    -fx-text-fill: #ffffff;
+}
+
+/* Ensure the displayed selection in the combo box is high contrast */
+.combo-box .label, .combo-box .text {
+    -fx-text-fill: #ffffff;
+    -fx-opacity: 1.0;
+}
+
+/* Arrow button visibility */
+.combo-box .arrow-button {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 8;
+}
+
+/* Focus states for keyboard navigation */
+.combo-box:focused, .combo-modern:focused {
+    -fx-border-color: rgba(124,58,237,0.9);
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.12), 12, 0, 0, 4);
+}
+
+/* Actions: make Transfer button more prominent and Back secondary */
+.primary-action {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #f59e0b 0%, #fbbf24 100%);
+    -fx-text-fill: #071233;
+    -fx-font-weight: 700;
+    -fx-pref-width: 120px;
+}
+.primary-action:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #f7b844 0%, #ffd86b 100%);
+}
+.secondary-action {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d28d9 0%, #7c3aed 100%);
+    -fx-text-fill: #ffffff;
+    -fx-pref-width: 110px;
+}
+.secondary-action:hover { -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aed 0%, #9f7bff 100%); }
+
+/* Hover for combo popup items (when not selected) */
+.combo-box .list-cell:hover {
+    -fx-background-color: rgba(99,102,241,0.08);
+}
+
+/* Subtle borders and shadows for visual hierarchy */
+.card, .panel, .transfer-form .combo-modern, .list-card {
+    -fx-effect: dropshadow(gaussian, rgba(2,6,23,0.35), 12, 0, 0, 6);
+}
+
+/* Slightly larger form labels */
+.transfer-form .label-inline { -fx-font-size: 13.5px; }
+
+/* TextField floating label mimic */
+.textfield, .combo-box {
+    -fx-background-radius: 8;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 8;
+    -fx-padding: 8 10 8 10;
+}
+
+.textfield:focused, .combo-box:focused {
+    -fx-border-color: rgba(99,102,241,0.9);
+    -fx-effect: dropshadow( gaussian , rgba(99,102,241,0.06), 12, 0, 0, 6 );
+}
+
+/* Modal/backdrop */
+.dialog-pane {
+    -fx-background-color: rgba(8,10,25,0.6);
+    -fx-background-radius: 12;
+    -fx-effect: gaussian-blur(6);
+}
+
+/* Subtle animated gradient background using keyframe animation via CSS variables */
+.root {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #08103a 0%, #2a1653 40%, #0b3a4b 100%);
+}
+
+/* ensure controls default to high-contrast text/background */
+.label, .text, .button, .combo-box {
+    -fx-text-fill: #f8fbff;
+}
+
+.textfield, .combo-box, .text-area {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-text-fill: #ffffff;
+}
+
+/* TextField input text - bold black for visibility */
+.text-field {
+    -fx-background-color: rgba(255,255,255,0.92);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(99,102,241,0.3);
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 10 8 10;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused {
+    -fx-background-color: rgba(255,255,255,0.98);
+    -fx-border-color: rgba(79,70,229,0.8);
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.15), 10, 0, 0, 4);
+}
+
+.text-field .text {
+    -fx-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+/* Loading spinner */
+.spinner {
+    -fx-pref-width: 48px;
+    -fx-pref-height: 48px;
+    -fx-background-color: transparent;
+}
+
+/* Accessibility tweaks */
+* {
+    -fx-focus-color: rgba(99,102,241,0.8);
+    -fx-faint-focus-color: rgba(99,102,241,0.2);
+}
+
+/* Micro animations via transitions */
+.btn, .table-modern .table-row-cell {
+    -fx-transition: all 180ms ease-in-out;
+    -fx-text-fill: #ffffff;
+}
+
+/* Small responsive tweaks */
+@media screen and (max-width: 800px) {
+    .heading-lg { -fx-font-size: 18px; }
+    .card { -fx-padding: 10; }
+}
+
+/* Unified page-root: consistent layout and spacing across all pages */
+.page-root {
+    -fx-padding: 28 32 28 32;
+    -fx-max-width: 1100px;
+    -fx-font-family: "Segoe UI Semilight", "Segoe UI", Roboto, Arial;
+}
+
+.page-root .heading-lg { -fx-font-size: 24px; -fx-letter-spacing: 0.2px; }
+.page-root .heading-md { -fx-font-size: 16px; }
+.page-root .card { -fx-padding: 16; }
+
+/* Standardize action button sizing and placement */
+.page-root .btn { -fx-pref-height: 40px; -fx-min-width: 96px; }
+.page-root .primary-action { -fx-pref-width: 140px; }
+.page-root .secondary-action { -fx-pref-width: 110px; }
+
+/* Ensure form label visibility and spacing */
+.page-root .label-inline { -fx-text-fill: #eef2ff; -fx-font-size: 13.5px; -fx-padding: 0 8 0 0; }
+
+/* Ensure table and list fonts are legible */
+.page-root .table-modern, .page-root .list-card { -fx-font-size: 13px; }
+
+/* Accessible focus outlines for keyboard users */
+.page-root .button:focused, .page-root .combo-box:focused, .page-root .text-field:focused {
+    -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.16), 10, 0, 0, 4);
+    -fx-border-color: rgba(124,58,237,0.95);
+}
+
+/* Tighter card visual hierarchy */
+.page-root .card { -fx-background-color: rgba(255,255,255,0.05); -fx-border-color: rgba(255,255,255,0.06); }

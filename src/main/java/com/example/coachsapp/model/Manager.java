@@ -15,7 +15,7 @@ public class Manager {
         this.club = club;
     }
 
-    // Getters and Setters
+
     public Integer getId() {
         return id;
     }

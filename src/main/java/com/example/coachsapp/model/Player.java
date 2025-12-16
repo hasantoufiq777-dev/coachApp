@@ -8,6 +8,7 @@ public class Player {
     private Position position;
     private boolean injured;
     private Integer clubId;
+    private String clubView;
 
     public Player(String name, int age, int jersey, Position position) {
         this.name = name;
@@ -27,7 +28,7 @@ public class Player {
         this.clubId = null;
     }
 
-    // Getters and Setters
+
     public Integer getId() {
         return id;
     }
@@ -84,6 +85,14 @@ public class Player {
         this.clubId = clubId;
     }
 
+    public String getClubView() {
+        return clubView;
+    }
+
+    public void setClubView(String clubView) {
+        this.clubView = clubView;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
@@ -94,6 +103,7 @@ public class Player {
                 ", position=" + position +
                 ", injured=" + injured +
                 ", clubId=" + clubId +
+                ", clubView='" + clubView + '\'' +
                 '}';
     }
 }

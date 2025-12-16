@@ -4,88 +4,192 @@ import com.example.coachsapp.model.Position;
 import com.example.coachsapp.model.Player;
 import com.example.coachsapp.util.AppState;
 import com.example.coachsapp.util.SceneSwitcher;
+import com.example.coachsapp.dialog.AddPlayerDialog;
+import com.example.coachsapp.db.PlayerRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.Alert;
 import javafx.collections.FXCollections;
+import javafx.scene.control.TableCell;
 import javafx.event.ActionEvent;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.stage.Stage;
 
 public class PlayerController {
 
     @FXML
-    private TextField nameField;
+    private TableView<Player> playerTable;
 
     @FXML
-    private TextField ageField;
+    private TableColumn<Player, String> playerNameColumn;
 
     @FXML
-    private TextField jerseyField;
+    private TableColumn<Player, Integer> playerAgeColumn;
 
     @FXML
-    private ComboBox<Position> positionCombo;
+    private TableColumn<Player, Integer> playerJerseyColumn;
 
     @FXML
-    private ComboBox<String> clubCombo;
+    private TableColumn<Player, String> playerPositionColumn;
 
     @FXML
-    private CheckBox injuredCheckBox;
+    private TableColumn<Player, String> playerStatusColumn;
+
+    @FXML
+    private TableColumn<Player, String> playerClubColumn;
+
+    private PlayerRepository playerRepository = new PlayerRepository();
 
     @FXML
     public void initialize() {
-        positionCombo.setItems(FXCollections.observableArrayList(Position.values()));
+        setupTableColumns();
+        refreshPlayerTable();
+        
+        // Add double-click handler to view player profile
+        playerTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Player selected = playerTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    viewPlayerProfile(selected);
+                }
+            }
+        });
+    }
 
-        // Populate club names from managers
-        clubCombo.setItems(FXCollections.observableArrayList(
-            AppState.managers.stream().map(m -> m.getClub().getClubName()).distinct().collect(java.util.stream.Collectors.toList())
-        ));
+    private void setupTableColumns() {
+        playerNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        // style name cells with a purple/blue tint for better visibility
+        playerNameColumn.setCellFactory(col -> new TableCell<Player, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    setStyle("-fx-text-fill: #7c3aed; -fx-font-weight: 600;");
+                }
+            }
+        });
+        playerAgeColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getAge()).asObject());
+        playerJerseyColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getJersey()).asObject());
+        playerPositionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPosition().toString()));
+        playerStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().isInjured() ? "Injured" : "Available"));
+        playerClubColumn.setCellValueFactory(cellData -> {
+            // Prefer the snapshot club view saved on the player (club_view). Fallback to club lookup by id.
+            String clubView = cellData.getValue().getClubView();
+            if (clubView != null && !clubView.isEmpty()) {
+                return new SimpleStringProperty(clubView);
+            }
+
+            Integer clubId = cellData.getValue().getClubId();
+            if (clubId != null) {
+                return new SimpleStringProperty(AppState.clubs.stream()
+                    .filter(c -> c.getId() != null && c.getId().equals(clubId))
+                    .map(c -> c.getClubName())
+                    .findFirst()
+                    .orElse("Unknown Club"));
+            }
+            return new SimpleStringProperty("No Club");
+        });
     }
 
     @FXML
-    public void savePlayer() {
-        String name = nameField.getText();
-        String ageText = ageField.getText();
-        String jerseyText = jerseyField.getText();
-        Position position = positionCombo.getValue();
-        String selectedClub = clubCombo.getValue();
-        boolean injured = injuredCheckBox != null && injuredCheckBox.isSelected();
+    public void addPlayer() {
+        Stage stage = (Stage) playerTable.getScene().getWindow();
+        AddPlayerDialog dialog = new AddPlayerDialog();
+        Player newPlayer = dialog.showDialog(stage);
 
-        if (name == null || name.isEmpty() || ageText == null || ageText.isEmpty() ||
-            jerseyText == null || jerseyText.isEmpty() || position == null || selectedClub == null) {
-            System.out.println("Error: All fields must be filled!");
-            return;
-        }
+        if (newPlayer != null) {
+            // Save to database
+            Player savedPlayer = playerRepository.save(newPlayer);
 
-        try {
-            int age = Integer.parseInt(ageText);
-            int jersey = Integer.parseInt(jerseyText);
+            if (savedPlayer != null) {
+                // Add to AppState
+                AppState.players.add(savedPlayer);
 
-            Player player = new Player(name, age, jersey, position, injured);
-            Integer clubId = getClubIdByName(selectedClub);
-            player.setClubId(clubId);
+                // Also add to the club's player list
+                if (savedPlayer.getClubId() != null) {
+                    AppState.clubs.stream()
+                        .filter(c -> c.getId() != null && c.getId().equals(savedPlayer.getClubId()))
+                        .findFirst()
+                        .ifPresent(club -> club.addPlayer(savedPlayer));
+                }
 
-            AppState.players.add(player);
-
-            System.out.println("✓ Player Created:");
-            System.out.println("Name: " + name);
-            System.out.println("Age: " + age);
-            System.out.println("Jersey: " + jersey);
-            System.out.println("Position: " + position);
-            System.out.println("Club: " + selectedClub);
-            System.out.println("Injured: " + injured);
-
-            clearFields();
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Age and Jersey must be valid numbers!");
+                refreshPlayerTable();
+                System.out.println("✓ Player added successfully: " + newPlayer.getName());
+            } else {
+                showError("Failed to save player to database");
+            }
         }
     }
 
-    private Integer getClubIdByName(String clubName) {
-        return AppState.managers.stream()
-            .filter(m -> m.getClub().getClubName().equals(clubName))
-            .findFirst()
-            .map(m -> m.getClub().getId())
-            .orElse(null);
+    @FXML
+    public void deletePlayer() {
+        Player selected = playerTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            AppState.players.remove(selected);
+
+            // Delete from database if player has an ID
+            if (selected.getId() != null) {
+                boolean deleted = playerRepository.delete(selected.getId());
+                if (deleted) {
+                    System.out.println("✓ Player deleted from database: " + selected.getName());
+                } else {
+                    System.out.println("✗ Failed to delete player from database");
+                }
+            }
+
+            // Remove from club's player list
+            if (selected.getClubId() != null) {
+                AppState.clubs.stream()
+                    .filter(c -> c.getId() != null && c.getId().equals(selected.getClubId()))
+                    .findFirst()
+                    .ifPresent(club -> club.removePlayer(selected));
+            }
+
+            refreshPlayerTable();
+            System.out.println("✓ Player deleted: " + selected.getName());
+        } else {
+            showError("Please select a player to delete");
+        }
+    }
+
+    @FXML
+    public void viewProfile(ActionEvent event) {
+        Player selected = playerTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            AppState.setSelectedPlayer(selected);
+            try {
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/example/coachsapp/player-profile-view.fxml"));
+                javafx.scene.Scene scene = new javafx.scene.Scene(loader.load(), 1000, 700);
+                javafx.stage.Stage stage = (javafx.stage.Stage) playerTable.getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } catch (Exception e) {
+                System.err.println("Error loading player profile: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            showError("Please select a player to view profile");
+        }
+    }
+
+    private void viewPlayerProfile(Player player) {
+        AppState.setSelectedPlayer(player);
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/example/coachsapp/player-profile-view.fxml"));
+            javafx.scene.Scene scene = new javafx.scene.Scene(loader.load(), 1000, 700);
+            javafx.stage.Stage stage = (javafx.stage.Stage) playerTable.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Error loading player profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -93,14 +197,15 @@ public class PlayerController {
         SceneSwitcher.switchTo(event, "main-view.fxml");
     }
 
-    private void clearFields() {
-        nameField.clear();
-        ageField.clear();
-        jerseyField.clear();
-        positionCombo.setValue(null);
-        clubCombo.setValue(null);
-        if (injuredCheckBox != null) {
-            injuredCheckBox.setSelected(false);
-        }
+    private void refreshPlayerTable() {
+        playerTable.setItems(FXCollections.observableArrayList(AppState.players));
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Validation Error");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
+

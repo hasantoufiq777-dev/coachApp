@@ -1,33 +1,29 @@
 package com.example.coachsapp.dialog;
 
-import com.example.coachsapp.model.Manager;
+import com.example.coachsapp.model.Club;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AddManagerDialog {
+public class AddClubDialog {
 
-    private Manager result = null;
+    private Club result = null;
 
-    public Manager showDialog(Stage parentStage) {
+    public Club showDialog(Stage parentStage) {
         Stage dialog = new Stage();
-        dialog.setTitle("Add Manager");
+        dialog.setTitle("Add Club");
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(parentStage);
         dialog.setWidth(500);
-        dialog.setHeight(280);
+        dialog.setHeight(240);
 
-        Label nameLabel = new Label("Manager Name:");
-        TextField nameField = new TextField();
-        nameField.setPromptText("Enter manager name");
-
-        Label clubLabel = new Label("Club Name:");
-        TextField clubField = new TextField();
-        clubField.setPromptText("Enter club name");
+        Label clubNameLabel = new Label("Club Name:");
+        TextField clubNameField = new TextField();
+        clubNameField.setPromptText("Enter club name (e.g., Manchester United)");
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().addAll("btn", "btn-primary");
@@ -35,15 +31,14 @@ public class AddManagerDialog {
         cancelButton.getStyleClass().addAll("btn", "btn-secondary");
 
         saveButton.setOnAction(event -> {
-            String name = nameField.getText().trim();
-            String club = clubField.getText().trim();
+            String clubName = clubNameField.getText().trim();
 
-            if (name.isEmpty() || club.isEmpty()) {
-                showError("Please fill in all fields");
+            if (clubName.isEmpty()) {
+                showError("Please enter a club name");
                 return;
             }
 
-            result = new Manager(name, club);
+            result = new Club(clubName);
             dialog.close();
         });
 
@@ -52,8 +47,8 @@ public class AddManagerDialog {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(15));
         vbox.getChildren().addAll(
-            nameLabel, nameField,
-            clubLabel, clubField,
+            clubNameLabel,
+            clubNameField,
             new HBox(10, saveButton, cancelButton)
         );
         vbox.getStyleClass().add("app-root");

@@ -3,13 +3,11 @@ package com.example.coachsapp.service;
 import com.example.coachsapp.model.Manager;
 import com.example.coachsapp.model.Player;
 import com.example.coachsapp.db.DatabaseService;
+import com.example.coachsapp.util.AppState;
 
 public class TransferService {
 
-    /**
-     * Transfer a player from one manager to another
-     * Updates both in-memory and database
-     */
+
     public static boolean transferPlayer(Manager fromManager, Manager toManager, Player player) {
         if (fromManager == null || toManager == null || player == null) {
             System.err.println("✗ Transfer failed: Invalid parameters");
@@ -43,6 +41,13 @@ public class TransferService {
             boolean removed = fromManager.getClub().removePlayer(player);
             if (removed) {
                 toManager.getClub().addPlayer(player);
+
+                // Sync AppState.players to reflect the transfer
+                AppState.players.clear();
+                for (Manager manager : AppState.managers) {
+                    AppState.players.addAll(manager.getClub().getPlayers());
+                }
+
                 System.out.println("✓ Transfer successful: " + player.getName() +
                                  " from " + fromManager.getClub().getClubName() +
                                  " to " + toManager.getClub().getClubName());

@@ -4,45 +4,26 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerController"
-      spacing="10" style="-fx-padding: 20;">
+      spacing="12" stylesheets="@styles.css" styleClass="app-root page-root" style="-fx-padding: 18;">
 
-    <Label text="Create Player" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    <Label text="Player Details" styleClass="heading-lg"/>
 
-    <HBox spacing="10">
-        <Label text="Name:" style="-fx-min-width: 80;"/>
-        <TextField fx:id="nameField" promptText="Enter player name"/>
-    </HBox>
-
-    <HBox spacing="10">
-        <Label text="Age:" style="-fx-min-width: 80;"/>
-        <TextField fx:id="ageField" promptText="Enter age"/>
-    </HBox>
-
-    <HBox spacing="10">
-        <Label text="Jersey:" style="-fx-min-width: 80;"/>
-        <TextField fx:id="jerseyField" promptText="Enter jersey number"/>
-    </HBox>
+    <TableView fx:id="playerTable" VBox.vgrow="ALWAYS" styleClass="table-modern">
+        <columns>
+            <TableColumn fx:id="playerNameColumn" text="Name" styleClass="col-name"/>
+            <TableColumn fx:id="playerAgeColumn" text="Age"/>
+            <TableColumn fx:id="playerJerseyColumn" text="Jersey"/>
+            <TableColumn fx:id="playerPositionColumn" text="Position"/>
+            <TableColumn fx:id="playerStatusColumn" text="Status"/>
+            <TableColumn fx:id="playerClubColumn" text="Club"/>
+        </columns>
+    </TableView>
 
     <HBox spacing="10">
-        <Label text="Position:" style="-fx-min-width: 80;"/>
-        <ComboBox fx:id="positionCombo"/>
-    </HBox>
-
-    <HBox spacing="10">
-        <Label text="Club:" style="-fx-min-width: 80;"/>
-        <ComboBox fx:id="clubCombo"/>
-    </HBox>
-
-    <HBox spacing="10">
-        <Label text="Injured:" style="-fx-min-width: 80;"/>
-        <CheckBox fx:id="injuredCheckBox" text="Yes, player is injured"/>
-    </HBox>
-
-    <Button text="Submit" onAction="#savePlayer" style="-fx-padding: 10;"/>
-
-    <HBox spacing="10">
+        <Button text="Add Player" onAction="#addPlayer" styleClass="btn btn-primary primary-action"/>
+        <Button text="Delete Player" onAction="#deletePlayer" styleClass="btn btn-danger"/>
+        <Button text="View Profile" onAction="#viewProfile" styleClass="btn btn-accent" prefWidth="120"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
+        <Button text="Back" onAction="#goBack" styleClass="btn btn-secondary secondary-action"/>
     </HBox>
 </VBox>
-

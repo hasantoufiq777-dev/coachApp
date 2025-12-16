@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.example.coachsapp.controller.ClubController"
+    spacing="12" stylesheets="@styles.css" styleClass="app-root page-root" style="-fx-padding: 18;">
+
+    <Label text="Clubs" styleClass="heading-lg"/>
+
+    <HBox spacing="12" VBox.vgrow="ALWAYS">
+        <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="card">
+            <TableView fx:id="clubTable" VBox.vgrow="ALWAYS" styleClass="table-modern">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID"/>
+                    <TableColumn fx:id="nameColumn" text="Club Name"/>
+                    <TableColumn fx:id="playerCountColumn" text="Players"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="8">
+                <Button text="Add Club" onAction="#addClub" styleClass="btn btn-primary primary-action"/>
+                <Button text="Delete Club" onAction="#deleteClub" styleClass="btn btn-danger"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="panel">
+            <Label text="Managers" styleClass="heading-sm"/>
+            <ListView fx:id="managerList" VBox.vgrow="SOMETIMES" styleClass="list-card"/>
+
+            <Label text="Players in Club" styleClass="heading-sm"/>
+            <TableView fx:id="playersTable" VBox.vgrow="ALWAYS" styleClass="table-compact">
+                <columns>
+                    <TableColumn fx:id="playerNameColumn" text="Name"/>
+                    <TableColumn fx:id="playerAgeColumn" text="Age"/>
+                    <TableColumn fx:id="playerJerseyColumn" text="Jersey"/>
+                    <TableColumn fx:id="playerPositionColumn" text="Position"/>
+                    <TableColumn fx:id="playerStatusColumn" text="Status"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="8">
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Back" onAction="#goBack" styleClass="btn btn-secondary secondary-action"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

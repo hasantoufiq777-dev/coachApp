@@ -4,25 +4,27 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerListController"
-      spacing="10" style="-fx-padding: 20;">
+      spacing="12" stylesheets="@styles.css" styleClass="app-root page-root" style="-fx-padding: 20;">
 
-    <Label text="Players" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    <Label text="Players" styleClass="heading-lg"/>
 
-    <TableView fx:id="playerTable" VBox.vgrow="ALWAYS">
+    <TableView fx:id="playerTable" VBox.vgrow="ALWAYS" styleClass="table-modern">
         <columns>
-            <TableColumn text="Name" fx:id="nameColumn"/>
+            <TableColumn text="Name" fx:id="nameColumn" styleClass="col-name"/>
             <TableColumn text="Age" fx:id="ageColumn"/>
             <TableColumn text="Jersey" fx:id="jerseyColumn"/>
             <TableColumn text="Position" fx:id="positionColumn"/>
+            <TableColumn text="Club" fx:id="clubColumn"/>
             <TableColumn text="Status" fx:id="statusColumn"/>
         </columns>
     </TableView>
 
     <HBox spacing="10">
-        <Button text="Add Player" onAction="#addPlayer"/>
-        <Button text="Delete Player" onAction="#deletePlayer"/>
+        <Button text="Add Player" onAction="#addPlayer" styleClass="btn btn-primary primary-action"/>
+        <Button text="Delete Player" onAction="#deletePlayer" styleClass="btn btn-danger"/>
+        <Button text="View Profile" onAction="#viewProfile" styleClass="btn btn-accent" prefWidth="120"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
+        <Button text="Back" onAction="#goBack" styleClass="btn btn-secondary secondary-action"/>
     </HBox>
 </VBox>
 
