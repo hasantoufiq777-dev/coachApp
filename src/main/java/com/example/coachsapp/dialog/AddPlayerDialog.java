@@ -55,7 +55,7 @@ public class AddPlayerDialog {
         Label injuredLabel = new Label("Injured:");
         CheckBox injuredCheckBox = new CheckBox("Yes, player is injured");
         injuredCheckBox.setSelected(false);
-        injuredCheckBox.setStyle("-fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px;");
+        injuredCheckBox.setStyle("-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 13px;");
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().addAll("btn", "btn-primary");

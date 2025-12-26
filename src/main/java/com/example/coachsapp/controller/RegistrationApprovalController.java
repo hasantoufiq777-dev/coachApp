@@ -133,7 +133,10 @@ public class RegistrationApprovalController {
             return;
         }
 
-        Manager newManager = new Manager(request.getUsername(), club.getClubName());
+        Manager newManager = new Manager(request.getUsername(), club);
+        if (request.getAge() != null) {
+            newManager.setAge(request.getAge());
+        }
         Manager savedManager = dbService.getManagerRepository().save(newManager);
         
         if (savedManager != null) {

@@ -115,7 +115,7 @@
 
 /* Table View */
 .table-view {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
     -fx-border-color: #9ca3af;
     -fx-border-width: 1;
     -fx-border-radius: 5;
@@ -148,7 +148,7 @@
 }
 
 .table-row-cell:even {
-    -fx-background-color: white;
+    -fx-background-color: #e5e7eb;
 }
 
 .table-row-cell:selected {
@@ -198,7 +198,7 @@
 
 /* Login Panel */
 .login-panel {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
     -fx-background-radius: 10;
     -fx-padding: 40;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
@@ -212,7 +212,7 @@
 
 /* Card Container */
 .card {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
     -fx-background-radius: 8;
     -fx-padding: 20;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
@@ -257,7 +257,7 @@
 
 /* Tab Pane */
 .tab-pane {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
 }
 
 .tab-pane .tab {
@@ -281,7 +281,7 @@
 
 /* Alert Styles */
 .alert {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
 }
 
 .alert .header-panel {
@@ -341,7 +341,7 @@
 }
 
 .context-menu {
-    -fx-background-color: white;
+    -fx-background-color: #d1d5db;
     -fx-border-color: #9ca3af;
 }
 
