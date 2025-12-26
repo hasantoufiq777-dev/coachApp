@@ -44,7 +44,6 @@ public class AddPlayerDialog {
 
         Label clubLabel = new Label("Club:");
         ComboBox<Club> clubCombo = new ComboBox<>();
-        // Use global AppState.clubs which is kept in sync with DB; fall back to clubs from managers
         if (!AppState.clubs.isEmpty()) {
             clubCombo.setItems(FXCollections.observableArrayList(AppState.clubs));
         } else {
@@ -85,14 +84,12 @@ public class AddPlayerDialog {
                     return;
                 }
 
-                if (jersey <= 0 || jersey > 99) {
-                    showError("Jersey number must be between 1 and 99");
+                if (jersey <= 0 || jersey > 120) {
+                    showError("Jersey number must be between 1 and 120");
                     return;
                 }
 
                 result = new Player(name, age, jersey, position, injured);
-                // Only set the club id on the returned Player; persistence and AppState updates
-                // are handled by the caller (controller) so the dialog remains UI-only.
                 result.setClubId(selectedClub.getId());
 
                 System.out.println("✓ Player Created (dialog): " + name + " @ " + selectedClub.getClubName());

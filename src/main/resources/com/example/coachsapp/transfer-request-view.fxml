@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.TransferRequestController"
+      spacing="20" alignment="TOP_CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Button text="← Back" onAction="#goBack"/>
+        <Label text="Transfer Requests" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <!-- Player Section: Submit Transfer Request -->
+    <VBox fx:id="playerSection" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Submit Transfer Request" style="-fx-font-size: 24px;"/>
+
+        <VBox spacing="8">
+            <Label text="Request Type:"/>
+            <ComboBox fx:id="destinationTypeCombo" promptText="Select request type" prefWidth="300"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Destination Club:"/>
+            <ComboBox fx:id="destinationClubCombo" promptText="Select destination club" prefWidth="300"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="Remarks (Optional):"/>
+            <TextArea fx:id="remarksArea" promptText="Add any notes..." prefHeight="80" prefWidth="300"/>
+        </VBox>
+
+        <Button text="Submit Transfer Request" onAction="#handleSubmitTransferRequest" prefWidth="200"/>
+
+        <Label fx:id="statusLabel" wrapText="true"/>
+    </VBox>
+
+    <!-- Manager Section: View and Approve Requests -->
+    <VBox fx:id="managerSection" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Transfer Requests Management" style="-fx-font-size: 24px;"/>
+        <Label text="Your players' transfer requests will appear below. Click 'Approve' to set the transfer fee and list them in the market." style="-fx-font-size: 12px; -fx-text-fill: gray;" wrapText="true"/>
+        <Label text="Action: Click 'Approve' → Set Transfer Fee → Player appears in Transfer Market" style="-fx-font-size: 11px; -fx-text-fill: #FFD700;" wrapText="true"/>
+    </VBox>
+
+    <!-- Admin Section: View All Requests -->
+    <VBox fx:id="adminSection" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="All Transfer Requests" style="-fx-font-size: 24px;"/>
+        <Label text="Overview of all transfer activities" style="-fx-font-size: 12px; -fx-text-fill: gray;"/>
+    </VBox>
+
+    <!-- Transfer Requests Table -->
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Transfer History" style="-fx-font-size: 24px;"/>
+
+        <TableView fx:id="requestsTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="playerNameCol" text="Player" prefWidth="120"/>
+                <TableColumn fx:id="sourceClubCol" text="From Club" prefWidth="120"/>
+                <TableColumn fx:id="destClubCol" text="To Club" prefWidth="120"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="180"/>
+                <TableColumn fx:id="feeCol" text="Transfer Fee" prefWidth="100"/>
+                <TableColumn fx:id="dateCol" text="Request Date" prefWidth="130"/>
+                <TableColumn fx:id="actionCol" text="Actions" prefWidth="230"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

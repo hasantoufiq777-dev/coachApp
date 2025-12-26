@@ -1,8 +1,6 @@
 package com.example.coachsapp.util;
 
-import com.example.coachsapp.model.Club;
-import com.example.coachsapp.model.Manager;
-import com.example.coachsapp.model.Player;
+import com.example.coachsapp.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,18 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppState {
-    public static List<Manager> managers = new ArrayList<>();
+    public static ObservableList<Manager> managers = FXCollections.observableArrayList();
 
-    // Global observable list of players so UI tables can bind to it
     public static ObservableList<Player> players = FXCollections.observableArrayList();
 
-    // Global observable list of clubs for club management
     public static ObservableList<Club> clubs = FXCollections.observableArrayList();
 
-    // Currently selected player for profile view
+    public static User currentUser = null;
+
     private static Player selectedPlayer;
 
-    // Currently selected manager for profile view
     private static Manager selectedManager;
 
     public static Player getSelectedPlayer() {
@@ -38,5 +34,14 @@ public class AppState {
 
     public static void setSelectedManager(Manager manager) {
         selectedManager = manager;
+    }
+
+    public static void refreshPlayers() {
+        players.clear();
+        for (Manager manager : managers) {
+            if (manager.getClub() != null && manager.getClub().getPlayers() != null) {
+                players.addAll(manager.getClub().getPlayers());
+            }
+        }
     }
 }

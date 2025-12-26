@@ -1,9 +1,6 @@
 package com.example.coachsapp.db;
 
-import com.example.coachsapp.model.Club;
-import com.example.coachsapp.model.Manager;
-import com.example.coachsapp.model.Player;
-import com.example.coachsapp.model.Position;
+import com.example.coachsapp.model.*;
 import java.util.List;
 
 /**
@@ -19,6 +16,10 @@ public class DatabaseInitializer {
 
         // Get database service
         DatabaseService dbService = DatabaseService.getInstance();
+
+        // Initialize new tables
+        dbService.getUserRepository().createTable();
+        dbService.getTransferRequestRepository().createTable();
 
         // Create sample data
         createSampleData(dbService);
@@ -97,6 +98,34 @@ public class DatabaseInitializer {
         Player p7 = new Player("Rodri", 27, 16, Position.MIDFIELDER);
         p7.setClubId(club3.getId());
         playerRepo.save(p7);
+
+        // Create sample users
+        UserRepository userRepo = dbService.getUserRepository();
+        
+        // Admin user
+        User admin = new User(null, "admin", "admin123", Role.SYSTEM_ADMIN, null, null, null);
+        userRepo.save(admin);
+        
+        // Club owners
+        User owner1 = new User(null, "mufc_owner", "password", Role.CLUB_OWNER, club1.getId(), null, null);
+        userRepo.save(owner1);
+        
+        User owner2 = new User(null, "lfc_owner", "password", Role.CLUB_OWNER, club2.getId(), null, null);
+        userRepo.save(owner2);
+        
+        // Club managers (linked to manager entities)
+        User mgr1 = new User(null, "ten_hag", "password", Role.CLUB_MANAGER, club1.getId(), null, manager1.getId());
+        userRepo.save(mgr1);
+        
+        User mgr2 = new User(null, "arne_slot", "password", Role.CLUB_MANAGER, club2.getId(), null, manager2.getId());
+        userRepo.save(mgr2);
+        
+        // Players (linked to player entities)
+        User player1 = new User(null, "ronaldo", "password", Role.PLAYER, club1.getId(), p1.getId(), null);
+        userRepo.save(player1);
+        
+        User player2 = new User(null, "salah", "password", Role.PLAYER, club2.getId(), p4.getId(), null);
+        userRepo.save(player2);
 
         System.out.println("\n✓ Sample data created successfully\n");
     }

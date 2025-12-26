@@ -13,11 +13,9 @@ import java.util.List;
  */
 public class PlayerRepository {
 
-    private Connection connection;
     private ClubRepository clubRepository;
 
     public PlayerRepository() {
-        this.connection = DatabaseConnection.getInstance().getConnection();
         this.clubRepository = new ClubRepository();
     }
 
@@ -25,12 +23,13 @@ public class PlayerRepository {
      * Save a new player to database
      */
     public Player save(Player player) {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         if (player.getName() == null || player.getName().isEmpty()) {
             System.err.println("✗ Player name cannot be null or empty");
             return null;
         }
 
-        String sql = "INSERT INTO player (name, age, jersey_number, position, injured, club_id, club_view) " +
+        String sql = "INSERT INTO players (name, age, jersey_number, position, injured, club_id, club_view) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, player.getName());
@@ -68,7 +67,8 @@ public class PlayerRepository {
      * Find player by ID
      */
     public Player findById(int id) {
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM players WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -86,8 +86,9 @@ public class PlayerRepository {
      * Get all players
      */
     public List<Player> findAll() {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         List<Player> players = new ArrayList<>();
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player ORDER BY name";
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM players ORDER BY name";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
@@ -104,8 +105,9 @@ public class PlayerRepository {
      * Get all players by club ID
      */
     public List<Player> findByClubId(int clubId) {
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         List<Player> players = new ArrayList<>();
-        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM player " +
+        String sql = "SELECT id, name, age, jersey_number, position, injured, club_id, club_view FROM players " +
                      "WHERE club_id = ? ORDER BY name";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, clubId);
@@ -120,11 +122,10 @@ public class PlayerRepository {
         return players;
     }
 
-    /**
-     * Update player
-     */
+
     public boolean update(Player player) {
-        String sql = "UPDATE player SET name = ?, age = ?, jersey_number = ?, position = ?, injured = ?, " +
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "UPDATE players SET name = ?, age = ?, jersey_number = ?, position = ?, injured = ?, " +
                      "club_id = ?, club_view = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, player.getName());
@@ -134,7 +135,7 @@ public class PlayerRepository {
             pstmt.setBoolean(5, player.isInjured());
             pstmt.setObject(6, player.getClubId(), Types.INTEGER);
 
-            // Determine club_view snapshot
+          
             String clubView = null;
             if (player.getClubId() != null) {
                 Club c = clubRepository.findById(player.getClubId());
@@ -154,20 +155,59 @@ public class PlayerRepository {
         return false;
     }
 
-    /**
-     * Delete player by ID
-     */
+ 
     public boolean delete(int id) {
-        String sql = "DELETE FROM player WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        if (connection == null) {
+            System.err.println("✗ Database connection is null when trying to delete player");
+            return false;
+        }
+        
+        try {
+            if (connection.isClosed()) {
+                System.err.println("✗ Database connection is closed when trying to delete player");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("✗ Error checking connection status: " + e.getMessage());
+            return false;
+        }
+        
+        String sql = "DELETE FROM playerss WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
+            System.out.println("=== DELETE OPERATION ===");
+            System.out.println("Attempting to delete player with ID: " + id);
+            System.out.println("Connection AutoCommit: " + connection.getAutoCommit());
+            
             int affectedRows = pstmt.executeUpdate();
+            System.out.println("Affected rows: " + affectedRows);
+            
+            // Explicitly commit if not in autocommit mode
+            if (!connection.getAutoCommit()) {
+                connection.commit();
+                System.out.println("Changes committed to database");
+            }
+            
             if (affectedRows > 0) {
-                System.out.println("✓ Player deleted (ID: " + id + ")");
+                System.out.println("✓ Player deleted from database (ID: " + id + ")");
+                System.out.println("========================");
                 return true;
+            } else {
+                System.err.println("✗ No player found with ID: " + id + " in database");
+                System.out.println("========================");
             }
         } catch (SQLException e) {
             System.err.println("✗ Error deleting player: " + e.getMessage());
+            e.printStackTrace();
+            try {
+                if (!connection.getAutoCommit()) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("✗ Error during rollback: " + rollbackEx.getMessage());
+            }
         }
         return false;
     }
@@ -176,7 +216,8 @@ public class PlayerRepository {
      * Get total number of players
      */
     public int count() {
-        String sql = "SELECT COUNT(*) FROM player";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        String sql = "SELECT COUNT(*) FROM players";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

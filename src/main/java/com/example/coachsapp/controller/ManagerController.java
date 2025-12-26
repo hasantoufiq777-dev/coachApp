@@ -23,8 +23,7 @@ public class ManagerController {
     @FXML
     public void initialize() {
         refreshManagerList();
-        
-        // Add double-click handler to view manager profile
+
         managerList.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Manager selected = managerList.getSelectionModel().getSelectedItem();
@@ -42,11 +41,11 @@ public class ManagerController {
         Manager newManager = dialog.showDialog(stage);
         
         if (newManager != null) {
-            // Persist the manager (and its club) to the database
+
             Manager saved = managerRepository.save(newManager);
 
             if (saved != null) {
-                // Ensure AppState holds the saved manager and club (with IDs)
+
                 AppState.managers.add(saved);
 
                 Club club = saved.getClub();

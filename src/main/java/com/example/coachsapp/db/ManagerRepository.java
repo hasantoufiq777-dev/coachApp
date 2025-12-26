@@ -12,11 +12,9 @@ import java.util.List;
  */
 public class ManagerRepository {
 
-    private Connection connection;
     private ClubRepository clubRepository;
 
     public ManagerRepository() {
-        this.connection = DatabaseConnection.getInstance().getConnection();
         this.clubRepository = new ClubRepository();
     }
 
@@ -39,7 +37,8 @@ public class ManagerRepository {
             club.setId(existingClub.getId());
         }
 
-        String sql = "INSERT INTO manager (name, club_id) VALUES (?, ?)";
+        String sql = "INSERT INTO managers (name, club_id) VALUES (?, ?)";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, manager.getName());
             pstmt.setInt(2, club.getId());
@@ -61,8 +60,9 @@ public class ManagerRepository {
      * Find manager by ID
      */
     public Manager findById(int id) {
-        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM manager m " +
-                     "JOIN club c ON m.club_id = c.id WHERE m.id = ?";
+        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM managers m " +
+                     "JOIN clubs c ON m.club_id = c.id WHERE m.id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -85,8 +85,9 @@ public class ManagerRepository {
      */
     public List<Manager> findAll() {
         List<Manager> managers = new ArrayList<>();
-        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM manager m " +
-                     "JOIN club c ON m.club_id = c.id ORDER BY m.name";
+        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM managers m " +
+                     "JOIN clubs c ON m.club_id = c.id ORDER BY m.name";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
@@ -104,10 +105,11 @@ public class ManagerRepository {
     }
 
     /**
-     * Update manager
+     * UPDATE managers
      */
     public boolean update(Manager manager) {
-        String sql = "UPDATE manager SET name = ?, club_id = ? WHERE id = ?";
+        String sql = "UPDATE managers SET name = ?, club_id = ? WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, manager.getName());
             pstmt.setInt(2, manager.getClub().getId());
@@ -127,7 +129,8 @@ public class ManagerRepository {
      * Delete manager by ID
      */
     public boolean delete(int id) {
-        String sql = "DELETE FROM manager WHERE id = ?";
+        String sql = "DELETE FROM managerss WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
@@ -145,7 +148,8 @@ public class ManagerRepository {
      * Get total number of managers
      */
     public int count() {
-        String sql = "SELECT COUNT(*) FROM manager";
+        String sql = "SELECT COUNT(*) FROM managers";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

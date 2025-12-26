@@ -5,17 +5,16 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.ManagerProfileController"
-      spacing="20" stylesheets="@styles.css" styleClass="app-root page-root" 
-      style="-fx-padding: 25;" alignment="TOP_CENTER">
+      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER">
 
-    <Label text="Manager Profile" styleClass="heading-lg"/>
+    <Label text="Manager Profile" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
     <!-- Profile Card -->
-    <VBox spacing="15" styleClass="card" style="-fx-padding: 25; -fx-max-width: 600px;">
+    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;">
         
         <!-- Manager Name (Header) -->
         <Label fx:id="managerNameLabel" text="Manager Name" 
-               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #7c3aed;"/>
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #010102;"/>
         
         <Separator/>
         
@@ -51,9 +50,9 @@
         <!-- Club Players Section -->
         <VBox spacing="10">
             <Label text="Club Squad" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <TableView fx:id="squadTable" prefHeight="200" styleClass="table-modern">
+            <TableView fx:id="squadTable" prefHeight="200">
                 <columns>
-                    <TableColumn fx:id="squadNameColumn" text="Player Name" prefWidth="150" styleClass="col-name"/>
+                    <TableColumn fx:id="squadNameColumn" text="Player Name" prefWidth="150"/>
                     <TableColumn fx:id="squadJerseyColumn" text="Jersey" prefWidth="80"/>
                     <TableColumn fx:id="squadPositionColumn" text="Position" prefWidth="120"/>
                     <TableColumn fx:id="squadStatusColumn" text="Status" prefWidth="100"/>
@@ -65,16 +64,13 @@
         
         <!-- Action Buttons -->
         <HBox spacing="15" alignment="CENTER">
-            <Button text="Edit Manager" onAction="#editManager" 
-                    styleClass="btn btn-primary" prefWidth="150" prefHeight="40"/>
-            <Button text="Change Club" onAction="#changeClub" 
-                    styleClass="btn btn-accent" prefWidth="150" prefHeight="40"/>
+            <Button text="Edit Manager" onAction="#editManager" prefWidth="150" prefHeight="40"/>
+            <Button text="Change Club" onAction="#changeClub" prefWidth="150" prefHeight="40"/>
         </HBox>
     </VBox>
 
     <!-- Bottom Navigation -->
     <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
-        <Button text="Back to Managers" onAction="#goBack" 
-                styleClass="btn btn-secondary" prefWidth="150" prefHeight="40"/>
+        <Button text="Back to Managers" onAction="#goBack" prefWidth="150" prefHeight="40"/>
     </HBox>
 </VBox>

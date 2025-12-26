@@ -5,17 +5,16 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerProfileController"
-      spacing="20" stylesheets="@styles.css" styleClass="app-root page-root" 
-      style="-fx-padding: 25;" alignment="TOP_CENTER">
+      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER">
 
-    <Label text="Player Profile" styleClass="heading-lg"/>
+    <Label text="Player Profile" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
-    <!-- Profile Card -->
-    <VBox spacing="15" styleClass="card" style="-fx-padding: 25; -fx-max-width: 600px;">
+
+    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;">
         
-        <!-- Player Name (Header) -->
+
         <Label fx:id="playerNameLabel" text="Player Name" 
-               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #7c3aed;"/>
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgba(1,1,2,0.79);"/>
         
         <Separator/>
         
@@ -39,13 +38,13 @@
             <Label fx:id="ageLabel" text="25" GridPane.columnIndex="1" GridPane.rowIndex="1"
                    style="-fx-font-size: 14px;"/>
             
-            <!-- Row 3: Position -->
+          
             <Label text="Position:" GridPane.columnIndex="0" GridPane.rowIndex="2"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <Label fx:id="positionLabel" text="Forward" GridPane.columnIndex="1" GridPane.rowIndex="2"
                    style="-fx-font-size: 14px;"/>
             
-            <!-- Row 4: Status -->
+        
             <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="3"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -53,13 +52,13 @@
                        style="-fx-font-size: 14px; -fx-padding: 4 12; -fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 12px;"/>
             </HBox>
             
-            <!-- Row 5: Club -->
+           
             <Label text="Current Club:" GridPane.columnIndex="0" GridPane.rowIndex="4"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <Label fx:id="clubLabel" text="No Club" GridPane.columnIndex="1" GridPane.rowIndex="4"
                    style="-fx-font-size: 14px;"/>
             
-            <!-- Row 6: Player ID -->
+         
             <Label text="Player ID:" GridPane.columnIndex="0" GridPane.rowIndex="5"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <Label fx:id="playerIdLabel" text="001" GridPane.columnIndex="1" GridPane.rowIndex="5"
@@ -70,16 +69,13 @@
         
         <!-- Action Buttons -->
         <HBox spacing="15" alignment="CENTER">
-            <Button text="Edit Player" onAction="#editPlayer" 
-                    styleClass="btn btn-primary" prefWidth="150" prefHeight="40"/>
-            <Button text="Toggle Injury Status" onAction="#toggleInjuryStatus" 
-                    styleClass="btn btn-accent" prefWidth="180" prefHeight="40"/>
+            <Button fx:id="editPlayerBtn" text="Edit Player" onAction="#editPlayer" prefWidth="150" prefHeight="40"/>
+            <Button text="Toggle Injury Status" onAction="#toggleInjuryStatus" prefWidth="180" prefHeight="40"/>
         </HBox>
     </VBox>
 
     <!-- Bottom Navigation -->
     <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
-        <Button text="Back to Players" onAction="#goBack" 
-                styleClass="btn btn-secondary" prefWidth="150" prefHeight="40"/>
+        <Button text="Return to Dashboard" onAction="#goBack" prefWidth="180" prefHeight="40"/>
     </HBox>
 </VBox>

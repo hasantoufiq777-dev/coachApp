@@ -1,5 +1,6 @@
 package com.example.coachsapp.controller;
 
+import com.example.coachsapp.db.DatabaseService;
 import com.example.coachsapp.model.Club;
 import com.example.coachsapp.model.Manager;
 import com.example.coachsapp.model.Player;
@@ -19,6 +20,8 @@ import javafx.collections.FXCollections;
 import javafx.util.Callback;
 
 public class ClubController {
+    
+    private DatabaseService dbService;
 
     @FXML
     private TableView<Club> clubTable;
@@ -56,6 +59,8 @@ public class ClubController {
 
     @FXML
     public void initialize() {
+        dbService = DatabaseService.getInstance();
+        
         // Set up club table columns
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClubName()));
@@ -132,27 +137,45 @@ public class ClubController {
         Club newClub = dialog.showDialog(stage);
 
         if (newClub != null) {
-            // Set club ID (in-memory)
-            if (AppState.clubs.isEmpty()) {
-                newClub.setId(1);
-            } else {
-                Integer maxId = AppState.clubs.stream()
-                    .map(Club::getId)
-                    .filter(id -> id != null)
-                    .max(Integer::compare)
-                    .orElse(0);
-                newClub.setId(maxId + 1);
+            // Check if club already exists in AppState
+            boolean existsInAppState = AppState.clubs.stream()
+                .anyMatch(c -> c.getClubName().equalsIgnoreCase(newClub.getClubName()));
+            
+            if (existsInAppState) {
+                showAlert("Duplicate Club", "A club with the name '" + newClub.getClubName() + "' already exists!");
+                return;
             }
-
-            AppState.clubs.add(newClub);
-            System.out.println("✓ Club added: " + newClub.getClubName() + " (ID: " + newClub.getId() + ")");
+            
+            // Save to database
+            Club savedClub = dbService.getClubRepository().save(newClub);
+            
+            if (savedClub != null) {
+                AppState.clubs.add(savedClub);
+                System.out.println("✓ Club added: " + savedClub.getClubName() + " (ID: " + savedClub.getId() + ")");
+                showAlert("Success", "Club added successfully: " + savedClub.getClubName());
+            } else {
+                System.err.println("✗ Failed to save club");
+                showAlert("Error", "Failed to save club.\n\nThis club name might already exist in the database.\nPlease try a different name.");
+            }
         }
+    }
+    
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
     public void deleteClub() {
         Club selected = clubTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
+            // Delete from database
+            dbService.getClubRepository().delete(selected.getId());
+            
+            // Remove from AppState
             AppState.clubs.remove(selected);
             clearClubDetails();
             System.out.println("✓ Deleted club: " + selected.getClubName());

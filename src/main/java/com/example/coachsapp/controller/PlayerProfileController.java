@@ -1,13 +1,19 @@
 package com.example.coachsapp.controller;
 
 import com.example.coachsapp.model.Player;
+import com.example.coachsapp.model.Role;
+import com.example.coachsapp.model.User;
 import com.example.coachsapp.util.AppState;
 import com.example.coachsapp.util.SceneSwitcher;
 import com.example.coachsapp.db.PlayerRepository;
+import com.example.coachsapp.db.DatabaseService;
+import com.example.coachsapp.dialog.EditPlayerDialog;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 
 public class PlayerProfileController {
 
@@ -32,13 +38,22 @@ public class PlayerProfileController {
     @FXML
     private Label playerIdLabel;
 
+    @FXML
+    private Button editPlayerBtn;
+
     private Player currentPlayer;
-    private PlayerRepository playerRepository = new PlayerRepository();
+    private DatabaseService dbService;
 
     @FXML
     public void initialize() {
-        // Get the selected player from AppState
+        dbService = DatabaseService.getInstance();
         currentPlayer = AppState.getSelectedPlayer();
+        
+        User currentUser = AppState.currentUser;
+        if (currentUser != null && currentUser.getRole() == Role.PLAYER) {
+            editPlayerBtn.setVisible(false);
+            editPlayerBtn.setManaged(false);
+        }
         
         if (currentPlayer != null) {
             loadPlayerProfile();
@@ -53,7 +68,6 @@ public class PlayerProfileController {
         ageLabel.setText(String.valueOf(currentPlayer.getAge()));
         positionLabel.setText(currentPlayer.getPosition().toString());
         
-        // Status with color coding
         if (currentPlayer.isInjured()) {
             statusLabel.setText("Injured");
             statusLabel.setStyle("-fx-font-size: 14px; -fx-padding: 4 12; -fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 12px;");
@@ -62,7 +76,6 @@ public class PlayerProfileController {
             statusLabel.setStyle("-fx-font-size: 14px; -fx-padding: 4 12; -fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 12px;");
         }
         
-        // Club information
         String clubView = currentPlayer.getClubView();
         if (clubView != null && !clubView.isEmpty()) {
             clubLabel.setText(clubView);
@@ -76,7 +89,6 @@ public class PlayerProfileController {
             clubLabel.setText("No Club");
         }
         
-        // Player ID
         if (currentPlayer.getId() != null) {
             playerIdLabel.setText(String.valueOf(currentPlayer.getId()));
         } else {
@@ -86,8 +98,41 @@ public class PlayerProfileController {
 
     @FXML
     public void editPlayer(ActionEvent event) {
-        // TODO: Implement edit functionality
-        showInfo("Edit functionality will be implemented soon");
+        if (currentPlayer == null) {
+            showError("No player selected");
+            return;
+        }
+
+        Stage stage = (Stage) playerNameLabel.getScene().getWindow();
+        EditPlayerDialog dialog = new EditPlayerDialog(currentPlayer);
+        Player updatedPlayer = dialog.showDialog(stage);
+
+        if (updatedPlayer != null) {
+            boolean updated = dbService.getPlayerRepository().update(updatedPlayer);
+            
+            if (updated) {
+
+                AppState.players.stream()
+                    .filter(p -> p.getId() != null && p.getId().equals(updatedPlayer.getId()))
+                    .findFirst()
+                    .ifPresent(p -> {
+                        p.setName(updatedPlayer.getName());
+                        p.setAge(updatedPlayer.getAge());
+                        p.setJersey(updatedPlayer.getJersey());
+                        p.setPosition(updatedPlayer.getPosition());
+                        p.setClubId(updatedPlayer.getClubId());
+                        p.setInjured(updatedPlayer.isInjured());
+                    });
+                
+                currentPlayer = updatedPlayer;
+                loadPlayerProfile();
+                
+                showInfo("Player details updated successfully!");
+                System.out.println("✓ Player updated: " + updatedPlayer.getName());
+            } else {
+                showError("Failed to update player in database");
+            }
+        }
     }
 
     @FXML
@@ -96,16 +141,14 @@ public class PlayerProfileController {
             boolean newStatus = !currentPlayer.isInjured();
             currentPlayer.setInjured(newStatus);
             
-            // Update in database
-            boolean updated = playerRepository.update(currentPlayer);
+            boolean updated = dbService.getPlayerRepository().update(currentPlayer);
             if (updated) {
-                // Update in AppState
+
                 AppState.players.stream()
                     .filter(p -> p.getId() != null && p.getId().equals(currentPlayer.getId()))
                     .findFirst()
                     .ifPresent(p -> p.setInjured(newStatus));
                 
-                // Refresh the display
                 loadPlayerProfile();
                 
                 String statusMsg = newStatus ? "injured" : "available";
@@ -119,8 +162,15 @@ public class PlayerProfileController {
 
     @FXML
     public void goBack(ActionEvent event) {
-        AppState.setSelectedPlayer(null); // Clear selection
-        SceneSwitcher.switchTo(event, "player-view.fxml");
+        User currentUser = AppState.currentUser;
+        
+        if (currentUser != null && currentUser.getRole() == Role.PLAYER) {
+            AppState.setSelectedPlayer(null);
+            SceneSwitcher.switchTo(event, "main-view.fxml");
+        } else {
+            AppState.setSelectedPlayer(null);
+            SceneSwitcher.switchTo(event, "player-view.fxml");
+        }
     }
 
     private void showError(String message) {

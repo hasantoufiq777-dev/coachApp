@@ -2,20 +2,26 @@ package com.example.coachsapp.controller;
 
 import com.example.coachsapp.model.Position;
 import com.example.coachsapp.model.Player;
+import com.example.coachsapp.model.User;
+import com.example.coachsapp.model.Role;
+import com.example.coachsapp.model.Club;
 import com.example.coachsapp.util.AppState;
 import com.example.coachsapp.util.SceneSwitcher;
 import com.example.coachsapp.dialog.AddPlayerDialog;
-import com.example.coachsapp.db.PlayerRepository;
+import com.example.coachsapp.db.DatabaseService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.event.ActionEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.stage.Stage;
+import java.util.stream.Collectors;
 
 public class PlayerController {
 
@@ -40,14 +46,23 @@ public class PlayerController {
     @FXML
     private TableColumn<Player, String> playerClubColumn;
 
-    private PlayerRepository playerRepository = new PlayerRepository();
+    @FXML
+    private ComboBox<String> clubFilterCombo;
+
+    @FXML
+    private ComboBox<String> positionFilterCombo;
+
+    private DatabaseService dbService;
+    private ObservableList<Player> basePlayerList; // Players visible to current user
 
     @FXML
     public void initialize() {
+        dbService = DatabaseService.getInstance();
         setupTableColumns();
-        refreshPlayerTable();
+        setupFilters();
+        loadBasePlayers();
+        applyFilters();
         
-        // Add double-click handler to view player profile
         playerTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Player selected = playerTable.getSelectionModel().getSelectedItem();
@@ -58,9 +73,117 @@ public class PlayerController {
         });
     }
 
+    private void setupFilters() {
+        // Setup position filter
+        ObservableList<String> positions = FXCollections.observableArrayList(
+            "All Positions", "GOALKEEPER", "DEFENDER", "MIDFIELDER", "FORWARD"
+        );
+        positionFilterCombo.setItems(positions);
+        positionFilterCombo.setValue("All Positions");
+        positionFilterCombo.setOnAction(e -> applyFilters());
+
+        // Setup club filter - will be populated in loadBasePlayers
+        clubFilterCombo.setOnAction(e -> applyFilters());
+    }
+
+    private void loadBasePlayers() {
+        User currentUser = AppState.currentUser;
+        
+        if (currentUser == null) {
+            basePlayerList = FXCollections.observableArrayList();
+            System.out.println("⚠ No user logged in");
+            return;
+        }
+
+        if (currentUser.getRole() == Role.SYSTEM_ADMIN) {
+            // Admin sees all players
+            basePlayerList = FXCollections.observableArrayList(AppState.players);
+            System.out.println("✓ Admin view: base list has " + basePlayerList.size() + " players");
+            
+            // Populate club filter with all clubs
+            ObservableList<String> clubs = FXCollections.observableArrayList("All Clubs");
+            clubs.addAll(AppState.clubs.stream()
+                .map(Club::getClubName)
+                .sorted()
+                .collect(Collectors.toList()));
+            clubFilterCombo.setItems(clubs);
+            clubFilterCombo.setValue("All Clubs");
+        } else if (currentUser.getRole() == Role.CLUB_MANAGER && currentUser.getClubId() != null) {
+            // Manager sees only their club's players
+            basePlayerList = FXCollections.observableArrayList(
+                AppState.players.stream()
+                    .filter(p -> p.getClubId() != null && p.getClubId().equals(currentUser.getClubId()))
+                    .collect(Collectors.toList())
+            );
+            System.out.println("✓ Manager view: base list has " + basePlayerList.size() + " players from club ID " + currentUser.getClubId());
+            
+            // Manager's club filter is pre-filtered to their club only
+            String managerClub = AppState.clubs.stream()
+                .filter(c -> c.getId() != null && c.getId().equals(currentUser.getClubId()))
+                .map(Club::getClubName)
+                .findFirst()
+                .orElse("My Club");
+            ObservableList<String> clubs = FXCollections.observableArrayList("All Players", managerClub);
+            clubFilterCombo.setItems(clubs);
+            clubFilterCombo.setValue("All Players");
+        } else {
+            // Other roles see no players
+            basePlayerList = FXCollections.observableArrayList();
+            System.out.println("⚠ User role " + currentUser.getRole() + " has no player access");
+        }
+    }
+
+    private void applyFilters() {
+        if (basePlayerList == null) {
+            return;
+        }
+
+        String selectedClub = clubFilterCombo.getValue();
+        String selectedPosition = positionFilterCombo.getValue();
+        
+        ObservableList<Player> filteredPlayers = FXCollections.observableArrayList(basePlayerList);
+
+        // Apply club filter
+        if (selectedClub != null && !selectedClub.equals("All Clubs") && !selectedClub.equals("All Players")) {
+            filteredPlayers = FXCollections.observableArrayList(
+                filteredPlayers.stream()
+                    .filter(p -> {
+                        String playerClub = p.getClubView();
+                        if (playerClub == null || playerClub.isEmpty()) {
+                            playerClub = AppState.clubs.stream()
+                                .filter(c -> c.getId() != null && c.getId().equals(p.getClubId()))
+                                .map(Club::getClubName)
+                                .findFirst()
+                                .orElse("");
+                        }
+                        return playerClub.equals(selectedClub);
+                    })
+                    .collect(Collectors.toList())
+            );
+        }
+
+        // Apply position filter
+        if (selectedPosition != null && !selectedPosition.equals("All Positions")) {
+            filteredPlayers = FXCollections.observableArrayList(
+                filteredPlayers.stream()
+                    .filter(p -> p.getPosition().toString().equals(selectedPosition))
+                    .collect(Collectors.toList())
+            );
+        }
+
+        playerTable.setItems(filteredPlayers);
+        System.out.println("✓ Filters applied: showing " + filteredPlayers.size() + " players (Club: " + selectedClub + ", Position: " + selectedPosition + ")");
+    }
+
+    @FXML
+    public void clearFilters() {
+        clubFilterCombo.setValue(clubFilterCombo.getItems().get(0)); // First item is "All"
+        positionFilterCombo.setValue("All Positions");
+        applyFilters();
+    }
+
     private void setupTableColumns() {
         playerNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        // style name cells with a purple/blue tint for better visibility
         playerNameColumn.setCellFactory(col -> new TableCell<Player, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -70,7 +193,7 @@ public class PlayerController {
                     setStyle("");
                 } else {
                     setText(item);
-                    setStyle("-fx-text-fill: #7c3aed; -fx-font-weight: 600;");
+                    setStyle("-fx-text-fill: black;");
                 }
             }
         });
@@ -104,14 +227,14 @@ public class PlayerController {
         Player newPlayer = dialog.showDialog(stage);
 
         if (newPlayer != null) {
-            // Save to database
-            Player savedPlayer = playerRepository.save(newPlayer);
+         
+            Player savedPlayer = dbService.getPlayerRepository().save(newPlayer);
 
             if (savedPlayer != null) {
-                // Add to AppState
+             
                 AppState.players.add(savedPlayer);
 
-                // Also add to the club's player list
+               
                 if (savedPlayer.getClubId() != null) {
                     AppState.clubs.stream()
                         .filter(c -> c.getId() != null && c.getId().equals(savedPlayer.getClubId()))
@@ -119,7 +242,7 @@ public class PlayerController {
                         .ifPresent(club -> club.addPlayer(savedPlayer));
                 }
 
-                refreshPlayerTable();
+                // No need to refresh - AppState.players is already bound
                 System.out.println("✓ Player added successfully: " + newPlayer.getName());
             } else {
                 showError("Failed to save player to database");
@@ -131,28 +254,37 @@ public class PlayerController {
     public void deletePlayer() {
         Player selected = playerTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            AppState.players.remove(selected);
-
-            // Delete from database if player has an ID
+            System.out.println("=== Attempting to delete player: " + selected.getName() + " (ID: " + selected.getId() + ") ===");
+    
             if (selected.getId() != null) {
-                boolean deleted = playerRepository.delete(selected.getId());
+                boolean deleted = dbService.getPlayerRepository().delete(selected.getId());
                 if (deleted) {
                     System.out.println("✓ Player deleted from database: " + selected.getName());
+                    
+           
+                    AppState.players.remove(selected);
+
+                  
+                    if (selected.getClubId() != null) {
+                        AppState.clubs.stream()
+                            .filter(c -> c.getId() != null && c.getId().equals(selected.getClubId()))
+                            .findFirst()
+                            .ifPresent(club -> club.removePlayer(selected));
+                    }
+
+                    // No need to refresh - AppState.players is already bound
+                    System.out.println("✓ Player deleted successfully: " + selected.getName());
+                    showInfo("Player deleted successfully!");
                 } else {
                     System.out.println("✗ Failed to delete player from database");
+                    showError("Failed to delete player from database");
                 }
+            } else {
+            
+                AppState.players.remove(selected);
+                refreshPlayerTable();
+                System.out.println("✓ Player removed (no database record)");
             }
-
-            // Remove from club's player list
-            if (selected.getClubId() != null) {
-                AppState.clubs.stream()
-                    .filter(c -> c.getId() != null && c.getId().equals(selected.getClubId()))
-                    .findFirst()
-                    .ifPresent(club -> club.removePlayer(selected));
-            }
-
-            refreshPlayerTable();
-            System.out.println("✓ Player deleted: " + selected.getName());
         } else {
             showError("Please select a player to delete");
         }
@@ -198,12 +330,20 @@ public class PlayerController {
     }
 
     private void refreshPlayerTable() {
-        playerTable.setItems(FXCollections.observableArrayList(AppState.players));
+        // Table is already bound to AppState.players, no action needed
+        playerTable.refresh();
     }
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Validation Error");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
         alert.setContentText(message);
         alert.showAndWait();
     }

@@ -95,16 +95,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", jersey=" + jersey +
-                ", position=" + position +
-                ", injured=" + injured +
-                ", clubId=" + clubId +
-                ", clubView='" + clubView + '\'' +
-                '}';
+        return name + " (#" + jersey + " - " + position + ")";
     }
 }
 

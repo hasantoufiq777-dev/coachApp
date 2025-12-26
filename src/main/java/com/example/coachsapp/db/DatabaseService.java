@@ -15,7 +15,9 @@ public class DatabaseService {
     private PlayerRepository playerRepository;
     private ManagerRepository managerRepository;
     private ClubRepository clubRepository;
-    private TransferHistoryRepository transferHistoryRepository;
+    private UserRepository userRepository;
+    private TransferRequestRepository transferRequestRepository;
+    private RegistrationRequestRepository registrationRequestRepository;
 
     /**
      * Private constructor for singleton pattern
@@ -25,7 +27,9 @@ public class DatabaseService {
         this.playerRepository = new PlayerRepository();
         this.managerRepository = new ManagerRepository();
         this.clubRepository = new ClubRepository();
-        this.transferHistoryRepository = new TransferHistoryRepository();
+        this.userRepository = new UserRepository();
+        this.transferRequestRepository = new TransferRequestRepository();
+        this.registrationRequestRepository = new RegistrationRequestRepository();
 
         // Initialize database schema
         this.dbConnection.initializeDatabase();
@@ -63,10 +67,24 @@ public class DatabaseService {
     }
 
     /**
-     * Get transfer history repository
+     * Get user repository
      */
-    public TransferHistoryRepository getTransferHistoryRepository() {
-        return transferHistoryRepository;
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    /**
+     * Get transfer request repository
+     */
+    public TransferRequestRepository getTransferRequestRepository() {
+        return transferRequestRepository;
+    }
+
+    /**
+     * Get registration request repository
+     */
+    public RegistrationRequestRepository getRegistrationRequestRepository() {
+        return registrationRequestRepository;
     }
 
     /**

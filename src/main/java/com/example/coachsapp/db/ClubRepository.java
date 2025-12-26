@@ -5,49 +5,63 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object (DAO) for Club operations
- * Handles all database operations for clubs
- */
+
 public class ClubRepository {
 
-    private Connection connection;
 
-    public ClubRepository() {
-        this.connection = DatabaseConnection.getInstance().getConnection();
-    }
-
-    /**
-     * Save a new club to database
-     */
     public Club save(Club club) {
         if (club.getClubName() == null || club.getClubName().isEmpty()) {
             System.err.println("✗ Club name cannot be null or empty");
             return null;
         }
 
-        String sql = "INSERT INTO club (name) VALUES (?)";
+
+        Club existing = findByName(club.getClubName());
+        if (existing != null) {
+            System.err.println("✗ Club already exists: " + club.getClubName() + " (ID: " + existing.getId() + ")");
+            return null;
+        }
+
+        String sql = "INSERT INTO clubs (name) VALUES (?)";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
+        
+        if (connection == null) {
+            System.err.println("✗ Database connection is null");
+            return null;
+        }
+        
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, club.getClubName());
-            pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+            
+            if (affectedRows == 0) {
+                System.err.println("✗ No rows affected when saving club");
+                return null;
+            }
 
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 club.setId(generatedKeys.getInt(1));
                 System.out.println("✓ Club saved: " + club.getClubName() + " (ID: " + club.getId() + ")");
                 return club;
+            } else {
+                System.err.println("✗ No generated key returned");
             }
         } catch (SQLException e) {
-            System.err.println("✗ Error saving club: " + e.getMessage());
+            if (e.getMessage().contains("UNIQUE constraint failed")) {
+                System.err.println("✗ Club name already exists: " + club.getClubName());
+            } else {
+                System.err.println("✗ Error saving club: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
         return null;
     }
 
-    /**
-     * Find club by ID
-     */
+
     public Club findById(int id) {
-        String sql = "SELECT id, name, created_at FROM club WHERE id = ?";
+        String sql = "SELECT id, name, created_at FROM clubs WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -63,11 +77,10 @@ public class ClubRepository {
         return null;
     }
 
-    /**
-     * Find club by name
-     */
+
     public Club findByName(String name) {
-        String sql = "SELECT id, name, created_at FROM club WHERE name = ?";
+        String sql = "SELECT id, name, created_at FROM clubs WHERE name = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
             ResultSet rs = pstmt.executeQuery();
@@ -83,12 +96,11 @@ public class ClubRepository {
         return null;
     }
 
-    /**
-     * Get all clubs
-     */
+
     public List<Club> findAll() {
         List<Club> clubs = new ArrayList<>();
-        String sql = "SELECT id, name, created_at FROM club ORDER BY name";
+        String sql = "SELECT id, name, created_at FROM clubs ORDER BY name";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
@@ -103,11 +115,10 @@ public class ClubRepository {
         return clubs;
     }
 
-    /**
-     * Update club
-     */
+
     public boolean update(Club club) {
-        String sql = "UPDATE club SET name = ? WHERE id = ?";
+        String sql = "UPDATE clubs SET name = ? WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, club.getClubName());
             pstmt.setInt(2, club.getId());
@@ -122,11 +133,10 @@ public class ClubRepository {
         return false;
     }
 
-    /**
-     * Delete club by ID
-     */
+
     public boolean delete(int id) {
-        String sql = "DELETE FROM club WHERE id = ?";
+        String sql = "DELETE FROM clubs WHERE id = ?";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
@@ -140,11 +150,10 @@ public class ClubRepository {
         return false;
     }
 
-    /**
-     * Get total number of clubs
-     */
+
     public int count() {
-        String sql = "SELECT COUNT(*) FROM club";
+        String sql = "SELECT COUNT(*) FROM clubs";
+        Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

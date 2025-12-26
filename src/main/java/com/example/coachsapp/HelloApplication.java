@@ -6,15 +6,9 @@ import com.example.coachsapp.model.Manager;
 import com.example.coachsapp.model.Player;
 import com.example.coachsapp.util.AppState;
 import javafx.application.Application;
-import com.example.coachsapp.ui.ParticlePane;
-import com.example.coachsapp.ui.BackgroundAnimator;
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,33 +20,56 @@ public class HelloApplication extends Application {
       DatabaseService db = DatabaseService.getInstance();
 
 
+      db.getUserRepository().createTable();
+      db.getTransferRequestRepository().createTable();
+      db.getRegistrationRequestRepository().createTable();
+
+      // Load all clubs directly from database
+      List<Club> allClubs = db.getClubRepository().findAll();
+      AppState.clubs.clear();
+      AppState.clubs.addAll(allClubs);
+      System.out.println("=== Loaded " + allClubs.size() + " clubs from database ===");
+
+      // Load all managers
       List<Manager> managers = db.loadAllManagers();
       AppState.managers.clear();
       AppState.managers.addAll(managers);
 
-      AppState.clubs.clear();
-      for (Manager m : managers) {
-        Club c = m.getClub();
-        if (c != null && !AppState.clubs.contains(c)) {
-          AppState.clubs.add(c);
-        }
-      }
-
       List<Player> players = db.loadAllPlayers();
+      System.out.println("=== Loaded " + players.size() + " players from database ===");
+      for (Player p : players) {
+        System.out.println("  Player: " + p.getName() + " (ID: " + p.getId() + ", ClubID: " + p.getClubId() + ")");
+      }
       AppState.players.clear();
       AppState.players.addAll(players);
 
+      System.out.println("=== Associating players with clubs ===");
+      System.out.println("Available clubs: " + AppState.clubs.size());
+      for (Club c : AppState.clubs) {
+        System.out.println("  Club: " + c.getClubName() + " (ID: " + c.getId() + ")");
+      }
+      
       for (Player p : players) {
         Integer cid = p.getClubId();
         if (cid != null) {
+          boolean found = false;
           for (Club c : AppState.clubs) {
             if (cid.equals(c.getId())) {
               c.addPlayer(p);
+              System.out.println("  ✓ Added player " + p.getName() + " to club " + c.getClubName());
+              found = true;
               break;
             }
           }
+          if (!found) {
+            System.out.println("  ✗ No club found for player " + p.getName() + " (club_id: " + cid + ")");
+          }
+        } else {
+          System.out.println("  ⚠ Player " + p.getName() + " has no club_id");
         }
       }
+
+      com.example.coachsapp.db.UserSeeder.seedDefaultUsers(db);
 
       System.out.println("✓ AppState populated: managers=" + AppState.managers.size() + ", clubs=" + AppState.clubs.size() + ", players=" + AppState.players.size());
     } catch (Exception e) {
@@ -60,35 +77,10 @@ public class HelloApplication extends Application {
       e.printStackTrace();
     }
 
-    FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
-    Node root = fxmlLoader.load();
-
-    Scene scene = new Scene((javafx.scene.Parent) root, 1000, 700);
-
-    ParticlePane particlePane = new ParticlePane();
-    particlePane.setPrefSize(1000, 700);
-
-    BackgroundAnimator bg = new BackgroundAnimator(1000, 700);
-
-    javafx.scene.layout.StackPane stack = new javafx.scene.layout.StackPane();
-    stack.getChildren().addAll(bg, particlePane, root);
-
-    Scene stackedScene = new Scene(stack, 1000, 700);
-
-    stackedScene.setFill(Color.web("#08103a"));
+    FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+    Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
     stage.setTitle("Coaches App");
-    stage.setScene(stackedScene);
+    stage.setScene(scene);
     stage.show();
-
-
-    bg.start();
-    particlePane.start();
-
-
-    FadeTransition ft = new FadeTransition(Duration.millis(450), root);
-    root.setOpacity(0);
-    ft.setFromValue(0);
-    ft.setToValue(1);
-    ft.play();
   }
 }

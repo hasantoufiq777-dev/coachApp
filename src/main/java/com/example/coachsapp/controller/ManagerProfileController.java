@@ -81,14 +81,14 @@ public class ManagerProfileController {
     private void loadManagerProfile() {
         managerNameLabel.setText(currentManager.getName());
         
-        // Manager ID
+
         if (currentManager.getId() != null) {
             managerIdLabel.setText(String.valueOf(currentManager.getId()));
         } else {
             managerIdLabel.setText("N/A");
         }
         
-        // Club information
+
         Club club = currentManager.getClub();
         if (club != null) {
             clubNameLabel.setText(club.getClubName());
@@ -98,7 +98,7 @@ public class ManagerProfileController {
                 clubIdLabel.setText("N/A");
             }
             
-            // Load squad players
+
             loadSquadPlayers(club);
         } else {
             clubNameLabel.setText("No Club");
@@ -107,7 +107,7 @@ public class ManagerProfileController {
     }
 
     private void loadSquadPlayers(Club club) {
-        // Get all players belonging to this club
+
         var clubPlayers = AppState.players.stream()
             .filter(p -> p.getClubId() != null && p.getClubId().equals(club.getId()))
             .toList();
