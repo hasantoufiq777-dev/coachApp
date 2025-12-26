@@ -118,6 +118,11 @@ public class ManagerController {
     }
 
     @FXML
+    public void switchToCardView(ActionEvent event) {
+        SceneSwitcher.switchTo(event, "manager-list-view.fxml");
+    }
+
+    @FXML
     public void goBack(ActionEvent event) {
         SceneSwitcher.switchTo(event, "main-view.fxml");
     }

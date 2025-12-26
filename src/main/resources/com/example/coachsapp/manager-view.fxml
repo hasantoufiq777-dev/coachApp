@@ -13,6 +13,7 @@
     <HBox spacing="10">
         <Button text="Add Manager" onAction="#addManager" styleClass="button-primary"/>
         <Button text="View Profile" onAction="#viewProfile" styleClass="button-info"/>
+        <Button text="Card View" onAction="#switchToCardView" styleClass="button-info"/>
         <Button text="Delete Manager" onAction="#deleteManager" styleClass="button-danger"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="Back" onAction="#goBack" styleClass="button-secondary"/>

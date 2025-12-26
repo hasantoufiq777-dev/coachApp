@@ -177,8 +177,9 @@ public class PlayerListController {
                           "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0, 0, 4);";
         card.setStyle(cardStyle);
         
-        Label jerseyLabel = new Label("#" + player.getJersey());
-        jerseyLabel.setStyle("-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: " + statusColor + ";");
+        // Player icon
+        Label playerIcon = new Label("⚽");
+        playerIcon.setStyle("-fx-font-size: 60px; -fx-text-fill: white;");
         
         Label nameLabel = new Label(player.getName().toUpperCase());
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;");
@@ -202,6 +203,9 @@ public class PlayerListController {
         statsBox.setPadding(new Insets(10, 0, 0, 0));
         statsBox.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-padding: 10; -fx-background-radius: 5;");
         
+        Label jerseyLabel = new Label("JERSEY: #" + player.getJersey());
+        jerseyLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + statusColor + "; -fx-font-weight: bold;");
+        
         Label posLabel = new Label("POS: " + player.getPosition().toString());
         posLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #ffdd57; -fx-font-weight: bold;");
         
@@ -216,7 +220,7 @@ public class PlayerListController {
         Label statusLabel = new Label(player.isInjured() ? "🚑 INJURED" : "✓ AVAILABLE");
         statusLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + statusColor + "; -fx-font-weight: bold;");
         
-        statsBox.getChildren().addAll(posLabel, ageLabel, clubLabel, statusLabel);
+        statsBox.getChildren().addAll(jerseyLabel, posLabel, ageLabel, clubLabel, statusLabel);
         
         HBox buttonBox = new HBox(8);
         buttonBox.setAlignment(Pos.CENTER);
@@ -236,7 +240,7 @@ public class PlayerListController {
         
         buttonBox.getChildren().addAll(viewBtn, editBtn, deleteBtn);
         
-        card.getChildren().addAll(jerseyLabel, nameLabel, statsBox, buttonBox);
+        card.getChildren().addAll(playerIcon, nameLabel, statsBox, buttonBox);
         
         card.setOnMouseEntered(e -> {
             card.setStyle(cardStyle + "-fx-cursor: hand; -fx-scale-x: 1.05; -fx-scale-y: 1.05;");

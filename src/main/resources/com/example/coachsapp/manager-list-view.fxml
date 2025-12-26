@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.coachsapp.controller.ManagerListController"
+      spacing="15" style="-fx-padding: 20; -fx-background-color: #2a2a2a;" stylesheets="@styles.css">
+
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Managers" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Add Manager" onAction="#addManager" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" styleClass="button-primary"/>
+        <Button text="Back" onAction="#goBack" 
+                style="-fx-background-color: #666; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" styleClass="button-secondary"/>
+    </HBox>
+
+    <!-- Filter Controls -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 15; -fx-background-color: #1a1a1a; -fx-background-radius: 8;">
+        <Label text="Filter by Club:" style="-fx-font-weight: bold; -fx-text-fill: white;"/>
+        <ComboBox fx:id="clubFilterCombo" prefWidth="200" promptText="All Clubs"/>
+        <Button text="Clear Filters" onAction="#clearFilters" 
+                style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+    </HBox>
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" 
+                style="-fx-background: #2a2a2a; -fx-background-color: #2a2a2a;">
+        <content>
+            <FlowPane fx:id="managerCardsPane" hgap="20" vgap="20" 
+                      style="-fx-background-color: #2a2a2a;" 
+                      prefWrapLength="800">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </FlowPane>
+        </content>
+    </ScrollPane>
+</VBox>
