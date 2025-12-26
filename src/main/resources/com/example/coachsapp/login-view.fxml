@@ -5,7 +5,7 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.LoginController"
-      spacing="20" alignment="CENTER">
+      spacing="20" alignment="CENTER" styleClass="main-container" stylesheets="@styles.css">
     
     <padding>
         <Insets top="50" right="50" bottom="50" left="50"/>
@@ -14,7 +14,7 @@
     <Label text="Coaches App" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
     <Label text="Login to Continue" style="-fx-font-size: 24px;"/>
 
-    <VBox spacing="15" alignment="CENTER" maxWidth="400">
+    <VBox spacing="15" alignment="CENTER" maxWidth="400" styleClass="login-panel">
         <padding>
             <Insets top="30" right="40" bottom="30" left="40"/>
         </padding>
@@ -31,13 +31,13 @@
 
         <Label fx:id="errorLabel" textFill="red"/>
 
-        <Button text="Login" onAction="#handleLogin" prefWidth="300" prefHeight="45"/>
+        <Button text="Login" onAction="#handleLogin" prefWidth="300" prefHeight="45" styleClass="button-primary"/>
 
         <Separator prefWidth="300"/>
 
         <VBox spacing="8" alignment="CENTER">
             <Label text="Don't have an account?" style="-fx-font-size: 12px;"/>
-            <Button text="Register as Manager/Player" onAction="#handleRegister" prefWidth="300" prefHeight="40"/>
+            <Button text="Register as Manager/Player" onAction="#handleRegister" prefWidth="300" prefHeight="40" styleClass="button-info"/>
         </VBox>
     </VBox>
 </VBox>

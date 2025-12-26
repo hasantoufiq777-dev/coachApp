@@ -40,7 +40,7 @@ public class LoginController {
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/coachsapp/main-view.fxml"));
-                Scene scene = new Scene(loader.load());
+                Scene scene = new Scene(loader.load(), 800, 600);
                 Stage stage = (Stage) usernameField.getScene().getWindow();
                 stage.setScene(scene);
                 stage.setTitle("Coaches App - " + user.getRole().getDisplayName());

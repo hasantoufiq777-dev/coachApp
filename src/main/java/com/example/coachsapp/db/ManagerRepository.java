@@ -3,6 +3,7 @@ package com.example.coachsapp.db;
 import com.example.coachsapp.model.Manager;
 import com.example.coachsapp.model.Club;
 import java.sql.*;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +38,16 @@ public class ManagerRepository {
             club.setId(existingClub.getId());
         }
 
-        String sql = "INSERT INTO managers (name, club_id) VALUES (?, ?)";
+        String sql = "INSERT INTO managers (name, age, club_id) VALUES (?, ?, ?)";
         Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, manager.getName());
-            pstmt.setInt(2, club.getId());
+            if (manager.getAge() != null) {
+                pstmt.setInt(2, manager.getAge());
+            } else {
+                pstmt.setNull(2, Types.INTEGER);
+            }
+            pstmt.setInt(3, club.getId());
             pstmt.executeUpdate();
 
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
@@ -60,7 +66,7 @@ public class ManagerRepository {
      * Find manager by ID
      */
     public Manager findById(int id) {
-        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM managers m " +
+        String sql = "SELECT m.id, m.name, m.age, m.club_id, c.name as club_name FROM managers m " +
                      "JOIN clubs c ON m.club_id = c.id WHERE m.id = ?";
         Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -72,6 +78,10 @@ public class ManagerRepository {
                 club.setId(rs.getInt("club_id"));
                 Manager manager = new Manager(rs.getString("name"), club);
                 manager.setId(rs.getInt("id"));
+                int age = rs.getInt("age");
+                if (!rs.wasNull()) {
+                    manager.setAge(age);
+                }
                 return manager;
             }
         } catch (SQLException e) {
@@ -85,7 +95,7 @@ public class ManagerRepository {
      */
     public List<Manager> findAll() {
         List<Manager> managers = new ArrayList<>();
-        String sql = "SELECT m.id, m.name, m.club_id, c.name as club_name FROM managers m " +
+        String sql = "SELECT m.id, m.name, m.age, m.club_id, c.name as club_name FROM managers m " +
                      "JOIN clubs c ON m.club_id = c.id ORDER BY m.name";
         Connection connection = DatabaseConnection.getInstance().getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -96,6 +106,10 @@ public class ManagerRepository {
                 club.setId(rs.getInt("club_id"));
                 Manager manager = new Manager(rs.getString("name"), club);
                 manager.setId(rs.getInt("id"));
+                int age = rs.getInt("age");
+                if (!rs.wasNull()) {
+                    manager.setAge(age);
+                }
                 managers.add(manager);
             }
         } catch (SQLException e) {

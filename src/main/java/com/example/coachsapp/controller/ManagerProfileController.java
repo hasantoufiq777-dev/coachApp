@@ -22,6 +22,9 @@ public class ManagerProfileController {
     private Label managerIdLabel;
 
     @FXML
+    private Label managerAgeLabel;
+
+    @FXML
     private Label clubNameLabel;
 
     @FXML
@@ -69,7 +72,7 @@ public class ManagerProfileController {
                     setStyle("");
                 } else {
                     setText(item);
-                    setStyle("-fx-text-fill: #7c3aed; -fx-font-weight: 600;");
+                    setStyle("-fx-text-fill: black; -fx-font-weight: 600;");
                 }
             }
         });
@@ -88,6 +91,11 @@ public class ManagerProfileController {
             managerIdLabel.setText("N/A");
         }
         
+        if (currentManager.getAge() != null) {
+            managerAgeLabel.setText(String.valueOf(currentManager.getAge()));
+        } else {
+            managerAgeLabel.setText("N/A");
+        }
 
         Club club = currentManager.getClub();
         if (club != null) {

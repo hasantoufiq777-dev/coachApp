@@ -160,6 +160,26 @@ public class UserRepository {
         return null;
     }
 
+    public User findByPlayerId(Integer playerId) {
+        if (playerId == null) return null;
+        
+        String sql = "SELECT * FROM users WHERE player_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, playerId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return extractUserFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding user by player_id: " + e.getMessage());
+        }
+        return null;
+    }
+
     public void delete(Integer id) {
         String sql = "DELETE FROM users WHERE id = ?";
         

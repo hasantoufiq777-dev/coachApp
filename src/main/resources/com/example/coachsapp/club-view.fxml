@@ -4,7 +4,7 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
     fx:controller="com.example.coachsapp.controller.ClubController"
-    spacing="12" style="-fx-padding: 18;">
+    spacing="12" style="-fx-padding: 18;" styleClass="main-container" stylesheets="@styles.css">
 
     <Label text="Clubs" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
@@ -19,8 +19,8 @@
             </TableView>
 
             <HBox spacing="8">
-                <Button text="Add Club" onAction="#addClub"/>
-                <Button text="Delete Club" onAction="#deleteClub"/>
+                <Button text="Add Club" onAction="#addClub" styleClass="button-primary"/>
+                <Button text="Delete Club" onAction="#deleteClub" styleClass="button-danger"/>
             </HBox>
         </VBox>
 
@@ -41,7 +41,7 @@
 
             <HBox spacing="8">
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Back" onAction="#goBack"/>
+                <Button text="Back" onAction="#goBack" styleClass="button-secondary"/>
             </HBox>
         </VBox>
     </HBox>

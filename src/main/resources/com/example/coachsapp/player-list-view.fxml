@@ -5,15 +5,15 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerListController"
-      spacing="15" style="-fx-padding: 20; -fx-background-color: #2a2a2a;">
+      spacing="15" style="-fx-padding: 20; -fx-background-color: #2a2a2a;" stylesheets="@styles.css">
 
     <HBox alignment="CENTER_LEFT" spacing="15">
         <Label text="Players" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="Add Player" onAction="#addPlayer" 
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" styleClass="button-primary"/>
         <Button text="Back" onAction="#goBack" 
-                style="-fx-background-color: #666; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"/>
+                style="-fx-background-color: #666; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" styleClass="button-secondary"/>
     </HBox>
 
     <!-- Filter Controls -->

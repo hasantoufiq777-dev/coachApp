@@ -208,6 +208,7 @@ public class TransferMarketController {
         confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 // Update player's club
+                Integer oldClubId = player.getClubId();
                 player.setClubId(currentUser.getClubId());
                 dbService.getPlayerRepository().update(player);
                 
@@ -216,6 +217,21 @@ public class TransferMarketController {
                 request.setDestinationClubId(currentUser.getClubId());
                 request.setCompletedDate(LocalDateTime.now());
                 dbService.getTransferRequestRepository().save(request);
+                
+                // Update user's club_id if this player has a user account
+                User playerUser = dbService.getUserRepository().findByPlayerId(player.getId());
+                if (playerUser != null) {
+                    playerUser.setClubId(currentUser.getClubId());
+                    dbService.getUserRepository().save(playerUser);
+                    System.out.println("✓ Updated user club_id for player: " + player.getName() + " from club " + oldClubId + " to " + currentUser.getClubId());
+                    
+                    // Update AppState.currentUser if this is the current logged-in player
+                    if (AppState.currentUser != null && AppState.currentUser.getPlayerId() != null && 
+                        AppState.currentUser.getPlayerId().equals(player.getId())) {
+                        AppState.currentUser.setClubId(currentUser.getClubId());
+                        System.out.println("✓ Updated current user's club_id in AppState");
+                    }
+                }
                 
                 // Refresh AppState
                 AppState.refreshPlayers();

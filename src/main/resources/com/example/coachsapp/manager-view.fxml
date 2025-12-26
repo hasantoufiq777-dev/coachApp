@@ -4,18 +4,18 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.ManagerController"
-      spacing="12" style="-fx-padding: 20;">
+      spacing="12" style="-fx-padding: 20;" styleClass="main-container" stylesheets="@styles.css">
 
     <Label text="Manager List" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
     <ListView fx:id="managerList" VBox.vgrow="ALWAYS"/>
 
     <HBox spacing="10">
-        <Button text="Add Manager" onAction="#addManager"/>
-        <Button text="View Profile" onAction="#viewProfile"/>
-        <Button text="Delete Manager" onAction="#deleteManager"/>
+        <Button text="Add Manager" onAction="#addManager" styleClass="button-primary"/>
+        <Button text="View Profile" onAction="#viewProfile" styleClass="button-info"/>
+        <Button text="Delete Manager" onAction="#deleteManager" styleClass="button-danger"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
+        <Button text="Back" onAction="#goBack" styleClass="button-secondary"/>
     </HBox>
 </VBox>
 

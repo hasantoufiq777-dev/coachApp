@@ -5,12 +5,12 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerProfileController"
-      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER">
+      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER" styleClass="main-container" stylesheets="@styles.css">
 
     <Label text="Player Profile" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
 
-    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;">
+    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;" styleClass="card">
         
 
         <Label fx:id="playerNameLabel" text="Player Name" 

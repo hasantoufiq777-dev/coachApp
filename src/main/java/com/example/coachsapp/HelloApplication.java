@@ -1,6 +1,7 @@
 package com.example.coachsapp;
 
 import com.example.coachsapp.db.DatabaseService;
+import com.example.coachsapp.db.DatabaseMigration;
 import com.example.coachsapp.model.Club;
 import com.example.coachsapp.model.Manager;
 import com.example.coachsapp.model.Player;
@@ -17,6 +18,9 @@ public class HelloApplication extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     try {
+      // Run database migration first
+      DatabaseMigration.migrateToVersion2();
+      
       DatabaseService db = DatabaseService.getInstance();
 
 
@@ -78,7 +82,7 @@ public class HelloApplication extends Application {
     }
 
     FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-    Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+    Scene scene = new Scene(fxmlLoader.load(), 800, 600);
     stage.setTitle("Coaches App");
     stage.setScene(scene);
     stage.show();

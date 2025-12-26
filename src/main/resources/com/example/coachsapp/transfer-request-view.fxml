@@ -5,14 +5,14 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.TransferRequestController"
-      spacing="20" alignment="TOP_CENTER">
+      spacing="20" alignment="TOP_CENTER" styleClass="main-container" stylesheets="@styles.css">
 
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <Button text="← Back" onAction="#goBack"/>
+        <Button text="← Back" onAction="#goBack" styleClass="button-secondary"/>
         <Label text="Transfer Requests" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
     </HBox>
 
@@ -39,7 +39,7 @@
             <TextArea fx:id="remarksArea" promptText="Add any notes..." prefHeight="80" prefWidth="300"/>
         </VBox>
 
-        <Button text="Submit Transfer Request" onAction="#handleSubmitTransferRequest" prefWidth="200"/>
+        <Button text="Submit Transfer Request" onAction="#handleSubmitTransferRequest" prefWidth="200" styleClass="button-primary"/>
 
         <Label fx:id="statusLabel" wrapText="true"/>
     </VBox>

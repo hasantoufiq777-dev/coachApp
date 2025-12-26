@@ -10,12 +10,21 @@ import java.io.IOException;
 
 public class SceneSwitcher {
 
+    // Default application dimensions
+    private static final double DEFAULT_SCENE_WIDTH = 800;
+    private static final double DEFAULT_SCENE_HEIGHT = 600;
+
     public static void switchTo(ActionEvent event, String fxmlName) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/com/example/coachsapp/" + fxmlName));
-            Scene scene = new Scene(loader.load(), 1000, 700);
-
             Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            
+            // Preserve current window dimensions
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/com/example/coachsapp/" + fxmlName));
+            Scene scene = new Scene(loader.load(), currentWidth, currentHeight);
+
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -25,10 +34,15 @@ public class SceneSwitcher {
 
     public static void switchTo(ActionEvent event, Scene currentScene, String fxmlName) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/com/example/coachsapp/" + fxmlName));
-            Scene scene = new Scene(loader.load(), 1000, 700);
-
             Stage stage = (Stage) currentScene.getWindow();
+            
+            // Preserve current window dimensions
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/com/example/coachsapp/" + fxmlName));
+            Scene scene = new Scene(loader.load(), currentWidth, currentHeight);
+
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

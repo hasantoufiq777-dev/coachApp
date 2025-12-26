@@ -4,12 +4,12 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.PlayerController"
-      spacing="12" style="-fx-padding: 18;">
+      spacing="12" style="-fx-padding: 18;" styleClass="main-container" stylesheets="@styles.css">
 
     <Label text="Player Details" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
     <!-- Filter Controls -->
-    <HBox spacing="15" style="-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-background-radius: 5;">
+    <HBox spacing="15" style="-fx-padding: 10; -fx-background-radius: 5;" styleClass="filter-panel">
         <Label text="Filter by Club:" style="-fx-font-weight: bold;"/>
         <ComboBox fx:id="clubFilterCombo" prefWidth="200" promptText="All Clubs"/>
         <Label text="Filter by Position:" style="-fx-font-weight: bold;"/>
@@ -29,10 +29,10 @@
     </TableView>
 
     <HBox spacing="10">
-        <Button text="Add Player" onAction="#addPlayer"/>
-        <Button text="Delete Player" onAction="#deletePlayer"/>
-        <Button text="View Profile" onAction="#viewProfile" prefWidth="120"/>
+        <Button text="Add Player" onAction="#addPlayer" styleClass="button-primary"/>
+        <Button text="Delete Player" onAction="#deletePlayer" styleClass="button-danger"/>
+        <Button text="View Profile" onAction="#viewProfile" prefWidth="120" styleClass="button-info"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Back" onAction="#goBack"/>
+        <Button text="Back" onAction="#goBack" styleClass="button-secondary"/>
     </HBox>
 </VBox>

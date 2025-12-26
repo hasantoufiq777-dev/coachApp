@@ -5,12 +5,12 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.coachsapp.controller.ManagerProfileController"
-      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER">
+      spacing="20" style="-fx-padding: 25;" alignment="TOP_CENTER" styleClass="main-container" stylesheets="@styles.css">
 
     <Label text="Manager Profile" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
 
     <!-- Profile Card -->
-    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;">
+    <VBox spacing="15" style="-fx-padding: 25; -fx-max-width: 600px;" styleClass="card">
         
         <!-- Manager Name (Header) -->
         <Label fx:id="managerNameLabel" text="Manager Name" 
@@ -32,16 +32,22 @@
             <Label fx:id="managerIdLabel" text="001" GridPane.columnIndex="1" GridPane.rowIndex="0"
                    style="-fx-font-size: 14px; -fx-text-fill: #6b7280;"/>
             
-            <!-- Row 2: Current Club -->
-            <Label text="Current Club:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+            <!-- Row 2: Age -->
+            <Label text="Age:" GridPane.columnIndex="0" GridPane.rowIndex="1"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-            <Label fx:id="clubNameLabel" text="Club Name" GridPane.columnIndex="1" GridPane.rowIndex="1"
+            <Label fx:id="managerAgeLabel" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   style="-fx-font-size: 14px; -fx-text-fill: #6b7280;"/>
+            
+            <!-- Row 3: Current Club -->
+            <Label text="Current Club:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+            <Label fx:id="clubNameLabel" text="Club Name" GridPane.columnIndex="1" GridPane.rowIndex="2"
                    style="-fx-font-size: 14px;"/>
             
-            <!-- Row 3: Club ID -->
-            <Label text="Club ID:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+            <!-- Row 4: Club ID -->
+            <Label text="Club ID:" GridPane.columnIndex="0" GridPane.rowIndex="3"
                    style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-            <Label fx:id="clubIdLabel" text="001" GridPane.columnIndex="1" GridPane.rowIndex="2"
+            <Label fx:id="clubIdLabel" text="001" GridPane.columnIndex="1" GridPane.rowIndex="3"
                    style="-fx-font-size: 14px; -fx-text-fill: #6b7280;"/>
         </GridPane>
         

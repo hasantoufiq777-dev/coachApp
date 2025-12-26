@@ -5,7 +5,7 @@
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
     fx:controller="com.example.coachsapp.controller.TransferMarketController"
-    spacing="20" fx:id="root">
+    spacing="20" fx:id="root" styleClass="main-container" stylesheets="@styles.css">
 
     <padding>
         <Insets top="30" right="30" bottom="30" left="30"/>
@@ -14,10 +14,10 @@
     <HBox alignment="CENTER_LEFT" spacing="20">
         <Label text="Transfer Market" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="backButton" text="Back to Dashboard" onAction="#goBack" prefWidth="180" prefHeight="40"/>
+        <Button fx:id="backButton" text="Back to Dashboard" onAction="#goBack" prefWidth="180" prefHeight="40" styleClass="button-secondary"/>
     </HBox>
 
-    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 10;">
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 10; -fx-background-radius: 10;" styleClass="filter-panel">
         <Label text="Filter by Position:" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
         <ComboBox fx:id="positionFilter" promptText="All Positions" prefWidth="180" onAction="#filterByPosition"/>
         <Region HBox.hgrow="ALWAYS"/>

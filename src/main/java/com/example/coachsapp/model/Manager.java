@@ -3,6 +3,7 @@ package com.example.coachsapp.model;
 public class Manager {
     private Integer id;
     private String name;
+    private Integer age;
     private Club club;
 
     public Manager(String managerName, String clubName) {
@@ -12,6 +13,12 @@ public class Manager {
 
     public Manager(String name, Club club) {
         this.name = name;
+        this.club = club;
+    }
+
+    public Manager(String name, Integer age, Club club) {
+        this.name = name;
+        this.age = age;
         this.club = club;
     }
 
@@ -30,6 +37,14 @@ public class Manager {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public Club getClub() {
