@@ -41,8 +41,7 @@ public class TransferMarketController {
     @FXML
     public void initialize() {
         dbService = DatabaseService.getInstance();
-        
-        // Setup position filter
+
         positionFilter.setItems(FXCollections.observableArrayList(
             "All Positions", "GOALKEEPER", "DEFENDER", "MIDFIELDER", "FORWARD"
         ));
@@ -54,7 +53,7 @@ public class TransferMarketController {
     private void loadMarketPlayers() {
         playersFlowPane.getChildren().clear();
         
-        // Get all players in transfer market (status = IN_MARKET)
+
         allMarketRequests = dbService.getTransferRequestRepository().findInMarket();
         
         updateResultCount(allMarketRequests.size());
@@ -106,7 +105,7 @@ public class TransferMarketController {
         card.setPadding(new Insets(15));
         card.getStyleClass().add("player-card");
         
-        // Set gradient based on position
+
         String gradient = switch (player.getPosition()) {
             case GOALKEEPER -> "linear-gradient(to bottom, #FF6B6B, #8B0000)";
             case DEFENDER -> "linear-gradient(to bottom, #4ECDC4, #006064)";
@@ -117,12 +116,12 @@ public class TransferMarketController {
                      "-fx-background-radius: 15; " +
                      "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 5);");
         
-        // Jersey number
+
         Label jerseyLabel = new Label("#" + player.getJersey());
         jerseyLabel.setFont(Font.font("Arial", FontWeight.BOLD, 48));
         jerseyLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.9);");
         
-        // Player name
+
         Label nameLabel = new Label(player.getName());
         nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         nameLabel.setStyle("-fx-text-fill: white;");
@@ -130,17 +129,17 @@ public class TransferMarketController {
         nameLabel.setMaxWidth(190);
         nameLabel.setAlignment(Pos.CENTER);
         
-        // Position
+
         Label positionLabel = new Label(player.getPosition().name());
         positionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         positionLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.8);");
         
-        // Age
+
         Label ageLabel = new Label("Age: " + player.getAge());
         ageLabel.setFont(Font.font("Arial", 12));
         ageLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.9);");
         
-        // Current club
+
         Label clubLabel = new Label(request.getSourceClubName());
         clubLabel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
         clubLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.9);");
@@ -148,13 +147,12 @@ public class TransferMarketController {
         clubLabel.setMaxWidth(190);
         clubLabel.setAlignment(Pos.CENTER);
         
-        // Transfer fee
+
         Label feeLabel = new Label(String.format("Transfer Fee: $%.2fM", request.getTransferFee()));
         feeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         feeLabel.setStyle("-fx-text-fill: #FFD700; -fx-background-color: rgba(0,0,0,0.3); " +
                          "-fx-padding: 5 10; -fx-background-radius: 5;");
-        
-        // Status indicator
+
         Label statusLabel = new Label(player.isInjured() ? "⚠ INJURED" : "✓ AVAILABLE");
         statusLabel.setFont(Font.font("Arial", FontWeight.BOLD, 11));
         statusLabel.setStyle(player.isInjured() ? 
@@ -166,7 +164,7 @@ public class TransferMarketController {
         
         card.getChildren().addAll(jerseyLabel, nameLabel, positionLabel, ageLabel, clubLabel, feeLabel, statusLabel);
         
-        // Add purchase button for managers (not for the source club manager)
+
         User currentUser = AppState.currentUser;
         if (currentUser != null && currentUser.getRole() == Role.CLUB_MANAGER) {
             if (!request.getSourceClubId().equals(currentUser.getClubId())) {
@@ -192,7 +190,7 @@ public class TransferMarketController {
             return;
         }
         
-        // Confirmation dialog
+
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirm Purchase");
         confirmation.setHeaderText("Purchase " + player.getName() + "?");
@@ -207,25 +205,24 @@ public class TransferMarketController {
         
         confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // Update player's club
+
                 Integer oldClubId = player.getClubId();
                 player.setClubId(currentUser.getClubId());
                 dbService.getPlayerRepository().update(player);
                 
-                // Update transfer request status
+
                 request.setStatus(TransferRequest.TransferStatus.COMPLETED);
                 request.setDestinationClubId(currentUser.getClubId());
                 request.setCompletedDate(LocalDateTime.now());
                 dbService.getTransferRequestRepository().save(request);
-                
-                // Update user's club_id if this player has a user account
+
                 User playerUser = dbService.getUserRepository().findByPlayerId(player.getId());
                 if (playerUser != null) {
                     playerUser.setClubId(currentUser.getClubId());
                     dbService.getUserRepository().save(playerUser);
                     System.out.println("✓ Updated user club_id for player: " + player.getName() + " from club " + oldClubId + " to " + currentUser.getClubId());
                     
-                    // Update AppState.currentUser if this is the current logged-in player
+
                     if (AppState.currentUser != null && AppState.currentUser.getPlayerId() != null && 
                         AppState.currentUser.getPlayerId().equals(player.getId())) {
                         AppState.currentUser.setClubId(currentUser.getClubId());
@@ -233,11 +230,11 @@ public class TransferMarketController {
                     }
                 }
                 
-                // Refresh AppState
+
                 AppState.refreshPlayers();
                 
                 showSuccess("Transfer completed successfully!");
-                loadMarketPlayers(); // Refresh the view
+                loadMarketPlayers();
             }
         });
     }

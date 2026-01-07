@@ -140,7 +140,6 @@ public class PlayerListController {
                 .collect(Collectors.toList());
         }
 
-        // Recreate cards with filtered players
         createPlayerCards(filteredPlayers);
         System.out.println("✓ Card filters applied: showing " + filteredPlayers.size() + " player cards (Club: " + selectedClub + ", Position: " + selectedPosition + ")");
     }

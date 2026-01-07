@@ -87,7 +87,7 @@ public class TransferRequestController {
         dbService = DatabaseService.getInstance();
         transferRequestRepo = dbService.getTransferRequestRepository();
 
-        // Setup table columns
+
         playerNameCol.setCellValueFactory(new PropertyValueFactory<>("playerName"));
         sourceClubCol.setCellValueFactory(new PropertyValueFactory<>("sourceClubName"));
         destClubCol.setCellValueFactory(new PropertyValueFactory<>("destinationClubName"));
@@ -107,12 +107,12 @@ public class TransferRequestController {
             });
         }
 
-        // Setup action column based on role
+
         setupActionColumn();
 
         requestsTable.setItems(transferRequests);
 
-        // Show appropriate UI based on role
+
         setupUIForRole();
         loadTransferRequests();
         
@@ -124,7 +124,6 @@ public class TransferRequestController {
         User currentUser = AppState.currentUser;
         if (currentUser == null) return;
 
-        // Hide all sections first
         playerSection.setVisible(false);
         playerSection.setManaged(false);
         managerSection.setVisible(false);
@@ -157,7 +156,7 @@ public class TransferRequestController {
             ));
             destinationTypeCombo.setValue("General Market");
             
-            // Show/hide club combo based on type
+
             destinationTypeCombo.setOnAction(e -> {
                 String type = destinationTypeCombo.getValue();
                 boolean showClubCombo = type != null && type.equals("Specific Club");
@@ -170,7 +169,7 @@ public class TransferRequestController {
         
         loadClubsForPlayer();
         
-        // Initially hide club combo
+
         if (destinationClubCombo != null) {
             destinationClubCombo.setVisible(false);
             destinationClubCombo.setManaged(false);
@@ -181,7 +180,6 @@ public class TransferRequestController {
         List<Club> allClubs = dbService.getClubRepository().findAll();
         User currentUser = AppState.currentUser;
 
-        // Filter out player's current club
         List<Club> availableClubs = allClubs.stream()
                 .filter(club -> !club.getId().equals(currentUser.getClubId()))
                 .toList();
@@ -206,7 +204,7 @@ public class TransferRequestController {
                 System.out.println("[PLAYER] Loaded " + requests.size() + " transfer requests");
                 break;
             case CLUB_MANAGER:
-                // Show only requests from own club (need to set fees or cancel)
+
                 Integer clubId = currentUser.getClubId();
                 System.out.println("[MANAGER] Club ID: " + clubId);
                 if (clubId == null) {
@@ -267,13 +265,13 @@ public class TransferRequestController {
                     User currentUser = AppState.currentUser;
 
                     if (currentUser != null && currentUser.getRole() == Role.CLUB_MANAGER) {
-                        // Manager of source club can approve or cancel
+
                         if (request.getSourceClubId().equals(currentUser.getClubId())) {
                             System.out.println("[DEBUG] Showing buttons for request - Player: " + request.getPlayerName() + ", Status: " + request.getStatus());
                             if (request.getStatus() == TransferRequest.TransferStatus.PENDING_APPROVAL) {
                                 setGraphic(pendingBox);
                             } else if (request.getStatus() == TransferRequest.TransferStatus.IN_MARKET) {
-                                // Can still cancel from market
+
                                 setGraphic(marketBox);
                             } else {
                                 setGraphic(null);
@@ -283,7 +281,7 @@ public class TransferRequestController {
                             setGraphic(null);
                         }
                     } else if (currentUser != null && currentUser.getRole() == Role.SYSTEM_ADMIN) {
-                        // Admin can see all but only approve if PENDING_APPROVAL
+
                         if (request.getStatus() == TransferRequest.TransferStatus.PENDING_APPROVAL) {
                             setGraphic(pendingBox);
                         } else {
@@ -311,7 +309,6 @@ public class TransferRequestController {
         System.out.println("Player ID: " + currentUser.getPlayerId());
         System.out.println("Player Club ID: " + currentUser.getClubId());
 
-        // Check if player already has pending request
         List<TransferRequest> existing = transferRequestRepo.findByPlayerId(currentUser.getPlayerId());
         System.out.println("Existing requests for player: " + existing.size());
         boolean hasPending = existing.stream()
@@ -345,11 +342,11 @@ public class TransferRequestController {
             System.out.println("Request type: General Market (no specific club)");
         }
 
-        // Create transfer request
+
         TransferRequest request = new TransferRequest(
                 currentUser.getPlayerId(),
                 currentUser.getClubId(),
-                destinationClubId  // null for general market
+                destinationClubId
         );
         request.setRemarks(remarksArea != null ? remarksArea.getText() : "");
         request.setStatus(TransferRequest.TransferStatus.PENDING_APPROVAL);
@@ -382,7 +379,6 @@ public class TransferRequestController {
     private void handleApproveAndSetFee(TransferRequest request) {
         if (request == null) return;
 
-        // Show dialog to set transfer fee
         TextInputDialog dialog = new TextInputDialog("5.0");
         dialog.setTitle("Approve Transfer & Set Fee");
         dialog.setHeaderText("Approve transfer request for " + request.getPlayerName());
@@ -396,8 +392,7 @@ public class TransferRequestController {
                     showError("Transfer fee must be greater than 0");
                     return;
                 }
-                
-                // Update request: set fee and put directly in market
+
                 request.setTransferFee(fee);
                 request.setStatus(TransferRequest.TransferStatus.IN_MARKET);
                 request.setApprovedBySourceDate(LocalDateTime.now());

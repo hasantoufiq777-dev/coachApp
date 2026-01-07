@@ -61,15 +61,15 @@ public class ClubController {
     public void initialize() {
         dbService = DatabaseService.getInstance();
         
-        // Set up club table columns
+
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getClubName()));
         playerCountColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPlayers().size()).asObject());
 
-        // Bind the club table to the global observable list
+
         clubTable.setItems(AppState.clubs);
 
-        // Set up manager list cell factory
+
         managerList.setCellFactory(new Callback<ListView<Manager>, ListCell<Manager>>() {
             @Override
             public ListCell<Manager> call(ListView<Manager> param) {
@@ -87,7 +87,7 @@ public class ClubController {
             }
         });
 
-        // Set up player table columns
+
         playerNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         playerAgeColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getAge()).asObject());
         playerJerseyColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getJersey()).asObject());
@@ -95,7 +95,7 @@ public class ClubController {
         playerStatusColumn.setCellValueFactory(cellData ->
             new SimpleStringProperty(cellData.getValue().isInjured() ? "Injured" : "Available"));
 
-        // Add listener to club table selection
+
         clubTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateClubDetails(newValue);
@@ -106,7 +106,7 @@ public class ClubController {
     }
 
     private void updateClubDetails(Club selectedClub) {
-        // Update managers list
+
         var managersForClub = AppState.managers.stream()
             .filter(m -> m.getClub().getId() != null && m.getClub().getId().equals(selectedClub.getId()))
             .toList();
@@ -117,7 +117,6 @@ public class ClubController {
             managerList.setItems(FXCollections.observableArrayList(managersForClub));
         }
 
-        // Update players list
         playersTable.setItems(FXCollections.observableArrayList(selectedClub.getPlayers()));
 
         System.out.println("✓ Club Details Loaded: " + selectedClub.getClubName());
@@ -137,7 +136,7 @@ public class ClubController {
         Club newClub = dialog.showDialog(stage);
 
         if (newClub != null) {
-            // Check if club already exists in AppState
+
             boolean existsInAppState = AppState.clubs.stream()
                 .anyMatch(c -> c.getClubName().equalsIgnoreCase(newClub.getClubName()));
             
@@ -146,7 +145,7 @@ public class ClubController {
                 return;
             }
             
-            // Save to database
+
             Club savedClub = dbService.getClubRepository().save(newClub);
             
             if (savedClub != null) {
@@ -172,10 +171,9 @@ public class ClubController {
     public void deleteClub() {
         Club selected = clubTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            // Delete from database
+
             dbService.getClubRepository().delete(selected.getId());
-            
-            // Remove from AppState
+
             AppState.clubs.remove(selected);
             clearClubDetails();
             System.out.println("✓ Deleted club: " + selected.getClubName());

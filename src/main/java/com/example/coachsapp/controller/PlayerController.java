@@ -272,7 +272,7 @@ public class PlayerController {
                             .ifPresent(club -> club.removePlayer(selected));
                     }
 
-                    // No need to refresh - AppState.players is already bound
+
                     System.out.println("✓ Player deleted successfully: " + selected.getName());
                     showInfo("Player deleted successfully!");
                 } else {
@@ -330,7 +330,6 @@ public class PlayerController {
     }
 
     private void refreshPlayerTable() {
-        // Table is already bound to AppState.players, no action needed
         playerTable.refresh();
     }
 

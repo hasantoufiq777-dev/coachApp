@@ -89,7 +89,6 @@ public class ManagerListController {
                 .collect(Collectors.toList());
         }
 
-        // Recreate cards with filtered managers
         createManagerCards(filteredManagers);
         System.out.println("✓ Card filters applied: showing " + filteredManagers.size() + " manager cards (Club: " + selectedClub + ")");
     }
@@ -135,21 +134,20 @@ public class ManagerListController {
         nameLabel.setMaxWidth(200);
         nameLabel.setAlignment(Pos.CENTER);
         
-        // Stats box
+
         VBox statsBox = new VBox(5);
         statsBox.setAlignment(Pos.CENTER_LEFT);
         statsBox.setPadding(new Insets(10));
         statsBox.setStyle("-fx-background-color: rgba(0,0,0,0.3); -fx-padding: 10; -fx-background-radius: 5;");
-        
-        // Manager ID
+
         Label idLabel = new Label("ID: " + (manager.getId() != null ? manager.getId() : "N/A"));
         idLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #aaa;");
         
-        // Age
+
         Label ageLabel = new Label("AGE: " + (manager.getAge() != null ? manager.getAge() : "N/A"));
         ageLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #aaa;");
         
-        // Club
+
         String clubName = manager.getClub() != null ? manager.getClub().getClubName() : "No Club";
         Label clubLabel = new Label("CLUB: " + clubName);
         clubLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #ffdd57; -fx-font-weight: bold;");
@@ -158,7 +156,7 @@ public class ManagerListController {
         
         statsBox.getChildren().addAll(idLabel, ageLabel, clubLabel);
         
-        // Button box
+
         HBox buttonBox = new HBox(8);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setPadding(new Insets(8, 0, 0, 0));

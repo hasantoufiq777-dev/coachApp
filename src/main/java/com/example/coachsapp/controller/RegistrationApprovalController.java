@@ -144,7 +144,6 @@ public class RegistrationApprovalController {
                                    Role.CLUB_MANAGER, request.getClubId(), null, savedManager.getId());
             dbService.getUserRepository().save(newUser);
 
-            // Update request status
             request.setStatus(RegistrationRequest.RequestStatus.APPROVED);
             request.setApprovedDate(java.time.LocalDateTime.now());
             dbService.getRegistrationRequestRepository().save(request);

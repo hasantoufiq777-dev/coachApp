@@ -50,7 +50,7 @@ public class ManagerProfileController {
 
     @FXML
     public void initialize() {
-        // Get the selected manager from AppState
+
         currentManager = AppState.getSelectedManager();
         
         if (currentManager != null) {
