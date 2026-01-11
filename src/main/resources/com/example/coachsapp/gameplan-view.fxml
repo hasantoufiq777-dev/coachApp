@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.coachsapp.controller.GamePlanController"
+            stylesheets="@styles.css">
+
+    <!-- Top: Title -->
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <Label text="Game Plan Manager" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <Label text="Create your lineup: 1 GK, 2 Defenders, 2 Midfielders, 1 Forward" 
+                   style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <!-- Left: List of Game Plans -->
+    <left>
+        <VBox spacing="10" style="-fx-padding: 20;" prefWidth="250">
+            <Label text="My Game Plans" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <ListView fx:id="gamePlanList" VBox.vgrow="ALWAYS" prefHeight="400"/>
+            
+            <VBox spacing="8">
+                <Button text="➕ New Game Plan" onAction="#createNew" 
+                        styleClass="button-primary" maxWidth="Infinity"/>
+                <Button fx:id="deleteButton" text="🗑 Delete Selected" onAction="#deleteGamePlan" 
+                        styleClass="button-danger" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Center: Game Plan Form and Field View -->
+    <center>
+        <HBox spacing="20" style="-fx-padding: 20;">
+            <!-- Left Side: Player Selection Form -->
+            <VBox fx:id="formContainer" spacing="15" prefWidth="450">
+                
+                <!-- Game Plan Name -->
+                <VBox spacing="5">
+                    <Label text="Game Plan Name:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="gamePlanNameField" promptText="Enter game plan name..."/>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Formation Display -->
+                <Label text="Formation (1-2-2-1)" 
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2196F3;"/>
+
+                <!-- Player Selection Grid -->
+                <GridPane hgap="15" vgap="12">
+                    
+                    <!-- Goalkeeper -->
+                    <Label text="⚽ Goalkeeper:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="goalkeeperCombo" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                             promptText="Select goalkeeper..." prefWidth="250"/>
+
+                    <!-- Defenders -->
+                    <Label text="🛡 Defender 1:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="defender1Combo" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                             promptText="Select defender 1..." prefWidth="250"/>
+
+                    <Label text="🛡 Defender 2:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="defender2Combo" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                             promptText="Select defender 2..." prefWidth="250"/>
+
+                    <!-- Midfielders -->
+                    <Label text="⚙ Midfielder 1:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="midfielder1Combo" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                             promptText="Select midfielder 1..." prefWidth="250"/>
+
+                    <Label text="⚙ Midfielder 2:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="midfielder2Combo" GridPane.columnIndex="1" GridPane.rowIndex="4"
+                             promptText="Select midfielder 2..." prefWidth="250"/>
+
+                    <!-- Forward -->
+                    <Label text="⚡ Forward:" GridPane.columnIndex="0" GridPane.rowIndex="5"
+                           style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="forwardCombo" GridPane.columnIndex="1" GridPane.rowIndex="5"
+                             promptText="Select forward..." prefWidth="250"/>
+                </GridPane>
+
+                <Separator/>
+
+                <!-- Status Label -->
+                <Label fx:id="statusLabel" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                <!-- Action Buttons -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="saveButton" text="💾 Save Game Plan" onAction="#saveGamePlan" 
+                            styleClass="button-success" prefWidth="150"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="← Back" onAction="#goBack" 
+                            styleClass="button-secondary"/>
+                </HBox>
+
+                <!-- Info Box -->
+                <VBox style="-fx-background-color: #E3F2FD; -fx-padding: 15; -fx-background-radius: 5;">
+                    <Label text="ℹ Tips:" style="-fx-font-weight: bold; -fx-text-fill: #1976D2;"/>
+                    <Label text="• Only non-injured players available" 
+                           style="-fx-text-fill: #1976D2; -fx-font-size: 11px;"/>
+                    <Label text="• Each player selected once" 
+                           style="-fx-text-fill: #1976D2; -fx-font-size: 11px;"/>
+                    <Label text="• All 6 positions must be filled" 
+                           style="-fx-text-fill: #1976D2; -fx-font-size: 11px;"/>
+                </VBox>
+            </VBox>
+
+            <!-- Right Side: Visual Field View -->
+            <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS">
+                <Label text="Field View" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                
+                <!-- Football Field -->
+                <Pane fx:id="fieldPane" prefWidth="400" prefHeight="600" 
+                      style="-fx-background-color: linear-gradient(to bottom, #1a6b2e 0%, #2d8f47 50%, #1a6b2e 100%); 
+                             -fx-border-color: white; -fx-border-width: 3; -fx-border-radius: 5; -fx-background-radius: 5;">
+                    
+                    <!-- Field Lines -->
+                    <Line startX="0" startY="300" endX="400" endY="300" 
+                          stroke="white" strokeWidth="2" opacity="0.6"/>
+                    
+                    <!-- Center Circle -->
+                    <Circle centerX="200" centerY="300" radius="50" 
+                            fill="transparent" stroke="white" strokeWidth="2" opacity="0.6"/>
+                    
+                    <!-- Center Spot -->
+                    <Circle centerX="200" centerY="300" radius="3" 
+                            fill="white" opacity="0.8"/>
+                    
+                    <!-- Penalty Areas -->
+                    <Rectangle x="140" y="10" width="120" height="60" 
+                               fill="transparent" stroke="white" strokeWidth="2" opacity="0.6"/>
+                    <Rectangle x="140" y="530" width="120" height="60" 
+                               fill="transparent" stroke="white" strokeWidth="2" opacity="0.6"/>
+                    
+                    <!-- Goal Areas -->
+                    <Rectangle x="170" y="10" width="60" height="30" 
+                               fill="transparent" stroke="white" strokeWidth="2" opacity="0.6"/>
+                    <Rectangle x="170" y="560" width="60" height="30" 
+                               fill="transparent" stroke="white" strokeWidth="2" opacity="0.6"/>
+                    
+                    <!-- Player Positions (1-2-2-1 Formation) - Symmetrically Positioned -->
+                    
+                    <!-- Goalkeeper (Centered) -->
+                    <VBox fx:id="gkCard" layoutX="170" layoutY="540" alignment="CENTER" 
+                          style="-fx-background-color: #FFD700; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="gkJersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                        <Label fx:id="gkName" text="GK" style="-fx-font-size: 10px;"/>
+                    </VBox>
+                    
+                    <!-- Defender 1 (Left) -->
+                    <VBox fx:id="def1Card" layoutX="100" layoutY="420" alignment="CENTER"
+                          style="-fx-background-color: #4CAF50; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="def1Jersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;"/>
+                        <Label fx:id="def1Name" text="DEF" style="-fx-font-size: 10px; -fx-text-fill: white;"/>
+                    </VBox>
+                    
+                    <!-- Defender 2 (Right) -->
+                    <VBox fx:id="def2Card" layoutX="240" layoutY="420" alignment="CENTER"
+                          style="-fx-background-color: #4CAF50; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="def2Jersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;"/>
+                        <Label fx:id="def2Name" text="DEF" style="-fx-font-size: 10px; -fx-text-fill: white;"/>
+                    </VBox>
+                    
+                    <!-- Midfielder 1 (Left) -->
+                    <VBox fx:id="mid1Card" layoutX="100" layoutY="280" alignment="CENTER"
+                          style="-fx-background-color: #2196F3; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="mid1Jersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;"/>
+                        <Label fx:id="mid1Name" text="MID" style="-fx-font-size: 10px; -fx-text-fill: white;"/>
+                    </VBox>
+                    
+                    <!-- Midfielder 2 (Right) -->
+                    <VBox fx:id="mid2Card" layoutX="240" layoutY="280" alignment="CENTER"
+                          style="-fx-background-color: #2196F3; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="mid2Jersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;"/>
+                        <Label fx:id="mid2Name" text="MID" style="-fx-font-size: 10px; -fx-text-fill: white;"/>
+                    </VBox>
+                    
+                    <!-- Forward (Centered) -->
+                    <VBox fx:id="fwdCard" layoutX="170" layoutY="140" alignment="CENTER"
+                          style="-fx-background-color: #F44336; -fx-padding: 5; -fx-background-radius: 5; 
+                                 -fx-border-color: #333; -fx-border-width: 2; -fx-border-radius: 5;" prefWidth="60">
+                        <Label fx:id="fwdJersey" text="-" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;"/>
+                        <Label fx:id="fwdName" text="FWD" style="-fx-font-size: 10px; -fx-text-fill: white;"/>
+                    </VBox>
+                </Pane>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

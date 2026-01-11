@@ -25,6 +25,7 @@
         <Button fx:id="manageClubsBtn" text="Manage Clubs" onAction="#goToClubs" prefWidth="300" prefHeight="50"/>
         <Button fx:id="managePlayersBtn" text="Manage Players" onAction="#goToPlayers" prefWidth="300" prefHeight="50"/>
         <Button fx:id="manageManagersBtn" text="Manage Managers" onAction="#goToManagers" prefWidth="300" prefHeight="50"/>
+        <Button fx:id="gamePlanBtn" text="Game Plan" onAction="#goToGamePlan" prefWidth="300" prefHeight="50"/>
         <Button fx:id="transferRequestBtn" text="Transfer Requests" onAction="#goToTransferRequests" prefWidth="300" prefHeight="50"/>
         <Button fx:id="transferMarketBtn" text="Transfer Market" onAction="#goToTransferMarket" prefWidth="300" prefHeight="50"/>
         

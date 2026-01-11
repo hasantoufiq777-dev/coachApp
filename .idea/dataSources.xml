@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="coaches_app" uuid="c770245b-39ac-48ab-a4b7-3a845a0b20b4">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>687279b2-d32d-4523-8d51-398b3c7c47bf</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/coaches_app.db</jdbc-url>

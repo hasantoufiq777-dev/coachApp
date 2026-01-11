@@ -43,6 +43,9 @@ public class MainController {
     private Button myProfileBtn;
 
     @FXML
+    private Button gamePlanBtn;
+
+    @FXML
     private Button logoutBtn;
 
     @FXML
@@ -72,6 +75,8 @@ public class MainController {
         transferMarketBtn.setManaged(false);
         myProfileBtn.setVisible(false);
         myProfileBtn.setManaged(false);
+        gamePlanBtn.setVisible(false);
+        gamePlanBtn.setManaged(false);
 
         switch (role) {
             case SYSTEM_ADMIN:
@@ -104,6 +109,8 @@ public class MainController {
 
                 managePlayersBtn.setVisible(true);
                 managePlayersBtn.setManaged(true);
+                gamePlanBtn.setVisible(true);
+                gamePlanBtn.setManaged(true);
                 transferRequestBtn.setVisible(true);
                 transferRequestBtn.setManaged(true);
                 transferRequestBtn.setText("Transfer Approvals");
@@ -148,6 +155,25 @@ public class MainController {
     @FXML
     public void goToTransferMarket(ActionEvent event) {
         SceneSwitcher.switchTo(event, "transfer-market-view.fxml");
+    }
+
+    @FXML
+    public void goToGamePlan(ActionEvent event) {
+        // Get the current user's manager based on their user record
+        User currentUser = AppState.currentUser;
+        if (currentUser != null && currentUser.getManagerId() != null) {
+            com.example.coachsapp.db.DatabaseService dbService = com.example.coachsapp.db.DatabaseService.getInstance();
+            com.example.coachsapp.model.Manager manager = dbService.getManagerRepository().findById(currentUser.getManagerId());
+            
+            if (manager != null) {
+                AppState.setSelectedManager(manager);
+                SceneSwitcher.switchTo(event, "gameplan-view.fxml");
+            } else {
+                System.err.println("Manager profile not found for ID: " + currentUser.getManagerId());
+            }
+        } else {
+            System.err.println("No manager ID found for current user");
+        }
     }
 
     @FXML

@@ -123,6 +123,17 @@ public class ManagerController {
     }
 
     @FXML
+    public void openGamePlan(ActionEvent event) {
+        Manager selected = managerList.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            AppState.setSelectedManager(selected);
+            SceneSwitcher.switchTo(event, "gameplan-view.fxml");
+        } else {
+            System.err.println("Please select a manager to manage game plans");
+        }
+    }
+
+    @FXML
     public void goBack(ActionEvent event) {
         SceneSwitcher.switchTo(event, "main-view.fxml");
     }

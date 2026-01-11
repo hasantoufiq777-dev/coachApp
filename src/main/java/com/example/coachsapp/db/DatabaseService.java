@@ -18,6 +18,7 @@ public class DatabaseService {
     private UserRepository userRepository;
     private TransferRequestRepository transferRequestRepository;
     private RegistrationRequestRepository registrationRequestRepository;
+    private GamePlanRepository gamePlanRepository;
 
     /**
      * Private constructor for singleton pattern
@@ -30,6 +31,7 @@ public class DatabaseService {
         this.userRepository = new UserRepository();
         this.transferRequestRepository = new TransferRequestRepository();
         this.registrationRequestRepository = new RegistrationRequestRepository();
+        this.gamePlanRepository = new GamePlanRepository();
 
         // Initialize database schema
         this.dbConnection.initializeDatabase();
@@ -85,6 +87,13 @@ public class DatabaseService {
      */
     public RegistrationRequestRepository getRegistrationRequestRepository() {
         return registrationRequestRepository;
+    }
+
+    /**
+     * Get game plan repository
+     */
+    public GamePlanRepository getGamePlanRepository() {
+        return gamePlanRepository;
     }
 
     /**
